@@ -8,11 +8,10 @@ import java.util.Scanner;
 public class AppInitializer {
     // Student Count Variables
     private static final int MAX_CAPACITY = 100;
-    private static final int studentCount = 0;
-
     // Student arrays
     public static String[] studentIds = new String[MAX_CAPACITY];
     public static String[] studentNames = new String[MAX_CAPACITY];
+    private static int studentCount = 0;
 
     public static void main(String[] args) {
         // main menu method
@@ -99,48 +98,131 @@ public class AppInitializer {
 
     // check the available seats in the array
     private static void checkAvailableSeats() {
-        System.out.println("Check Available Seats");
+        int available_seats = MAX_CAPACITY - studentCount;
+        System.out.print("Available Seats: " + available_seats);
+        mainMenuConsole();
+        mainMenuInput();
     }
 
     // add the student details
     private static void registerNewStudent() {
         Scanner studInput = new Scanner(System.in);
+        System.out.print("\n");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
+        System.out.print("|");
+        System.out.print("\t\t\t\t\t\t\t\tREGISTER NEW STUDENT");
+        System.out.println("\t\t\t\t\t\t\t\t\t\t|");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
 
         // checking the available seats in the student
         if (MAX_CAPACITY >= studentCount) {
             System.out.println("Seats are available");
         } else {
-            System.out.println("Seats are not available");
+            System.out.println("Seats are not available. Please try to the removing the one or more students.");
         }
 
-        System.out.print("Enter the Student id: ");
-        String id = studInput.next();
+        // store values in the array
+        int indexValues = nextIdValues(studentIds);
 
+        //  check the existing the student id
+        for (int i = indexValues; i < studentIds.length; i++) {
+            System.out.print("Enter the Student Id: ");
+            String sId = studInput.next();
+
+            //  check the existing the student id
+            boolean studentIdFound = false;
+            for (String studentId : studentIds) {
+                if (sId.equals(studentId)) {
+                    System.out.println("The Student id was Already Exists. Please Try again.");
+                    studentIdFound = true;
+                    break;
+                }
+            }
+
+            // if hadn't any exist student id found, this block executed.
+            if (!studentIdFound) {
+                studentIds[i] = sId;
+                System.out.print("Enter the Student Name: ");
+                String sName = studInput.next();
+                studentNames[i] = sName;
+                studentCount++;
+
+                System.out.print("Added Successfully! Do you want to add another student? [Y/N]: ");
+                char yesNo = studInput.next().charAt(0);
+                switch (yesNo) {
+                    case 'y':
+                    case 'Y':
+                        clearWorkingConsole();
+                        registerNewStudent();
+                        break;
+                    case 'n':
+                    case 'N':
+                        clearWorkingConsole();
+                        mainMenuConsole();
+                        mainMenuInput();
+                        break;
+                    default:
+                        System.out.println("Invalid Value.. Try Again..!");
+                        clearWorkingConsole();
+                        mainMenuConsole();
+                        mainMenuInput();
+                        break;
+                }
+            }
+        }
     }
 
     // Delete the student details
     private static void deleteStudent() {
+        System.out.print("\n");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
+        System.out.print("|");
+        System.out.print("\t\t\t\t\t\t\t\tDELETE STUDENT");
+        System.out.println("\t\t\t\t\t\t\t\t\t\t|");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.println("Delete Student");
     }
 
     // Find the Student Details
     private static void findStudent() {
+        System.out.print("\n");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
+        System.out.print("|");
+        System.out.print("\t\t\t\t\t\t\t\tFIND STUDENT");
+        System.out.println("\t\t\t\t\t\t\t\t\t\t|");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.println("Find Student");
     }
 
     //Store the student details using file
     private static void storeStudentDetails() {
+        System.out.print("\n");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
+        System.out.print("|");
+        System.out.print("\t\t\t\t\t\t\t\tSTORE STUDENT DETAILS");
+        System.out.println("\t\t\t\t\t\t\t\t\t\t|");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.println("Store Student Details (within the file)");
     }
 
     // Load the student details using file
     private static void loadStudentDetails() {
-        System.out.println("Load Student Details (from the file)");
+        System.out.print("\n");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
+        System.out.print("|");
+        System.out.print("\t\t\t\t\t\t\t\tLOAD STUDENT DETAILS");
+        System.out.println("\t\t\t\t\t\t\t\t\t\t|");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
     }
 
     // View the list of students
     private static void viewStudentList() {
-        System.out.println("View the list of students");
+        System.out.print("\n");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
+        System.out.print("|");
+        System.out.print("\t\t\t\t\t\t\t\tVIEW STUDENT LIST");
+        System.out.println("\t\t\t\t\t\t\t\t\t\t|");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
     }
 
     // Exit the system
@@ -169,4 +251,15 @@ public class AppInitializer {
         }
     }
 
+    // store values in the array
+    public static int nextIdValues(String[] id) {
+        int array = id.length;
+        for (int i = 0; i < id.length; i++) {
+            if (id[i] == null) {
+                array = i;
+                break;
+            }
+        }
+        return array;
+    }
 }
