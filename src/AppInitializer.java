@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -13,8 +14,8 @@ public class AppInitializer {
     public static String[] studentNames = new String[MAX_CAPACITY];
     private static int studentCount = 0;
 
+    // Runnable Method
     public static void main(String[] args) {
-        // main menu method
         mainMenuConsole();
         mainMenuInput();
     }
@@ -59,40 +60,48 @@ public class AppInitializer {
     // main menu input method
     private static void mainMenuInput() {
         Scanner input_number = new Scanner(System.in);
-        System.out.print("Enter the option to continue > ");
-        int inputted_num = input_number.nextInt();
-        switch (inputted_num) {
-            case 1:
-                checkAvailableSeats();
-                break;
-            case 2:
-                registerNewStudent();
-                break;
-            case 3:
-                deleteStudent();
-                break;
-            case 4:
-                findStudent();
-                break;
-            case 5:
-                storeStudentDetails();
-                break;
-            case 6:
-                loadStudentDetails();
-                break;
-            case 7:
-                viewStudentList();
-                break;
-            case 8:
-                exitTheSystem();
-                break;
+        // Handling the exception
+        try {
+            System.out.print("Enter the option to continue > ");
+            int inputted_num = input_number.nextInt();
+            switch (inputted_num) {
+                case 1:
+                    checkAvailableSeats();
+                    break;
+                case 2:
+                    registerNewStudent();
+                    break;
+                case 3:
+                    deleteStudent();
+                    break;
+                case 4:
+                    findStudent();
+                    break;
+                case 5:
+                    storeStudentDetails();
+                    break;
+                case 6:
+                    loadStudentDetails();
+                    break;
+                case 7:
+                    viewStudentList();
+                    break;
+                case 8:
+                    exitTheSystem();
+                    break;
 
-            default:
-                System.out.println("Invalid Input!! Please Try again!!");
-                clearWorkingConsole();
-                mainMenuConsole();
-                mainMenuInput();
-                break;
+                default:
+                    System.out.println("Invalid Input!! Please Try again!!");
+                    clearWorkingConsole();
+                    mainMenuConsole();
+                    mainMenuInput();
+                    break;
+            }
+        } catch (InputMismatchException ex) {
+            System.out.println("Please type a valid input..!!");
+            clearWorkingConsole();
+            mainMenuConsole();
+            mainMenuInput();
         }
     }
 
@@ -124,7 +133,7 @@ public class AppInitializer {
         // store values in the array
         int indexValues = nextIdValues(studentIds);
 
-        //  check the existing the student id
+        //  main loop
         for (int i = indexValues; i < studentIds.length; i++) {
             System.out.print("Enter the Student Id: ");
             String sId = studInput.next();
@@ -139,7 +148,7 @@ public class AppInitializer {
                 }
             }
 
-            // if hadn't any exist student id found, this block executed.
+            // if hadn't any exist student id found, this block executed and allow to add the students name.
             if (!studentIdFound) {
                 studentIds[i] = sId;
                 System.out.print("Enter the Student Name: ");
@@ -147,26 +156,34 @@ public class AppInitializer {
                 studentNames[i] = sName;
                 studentCount++;
 
-                System.out.print("Added Successfully! Do you want to add another student? [Y/N]: ");
-                char yesNo = studInput.next().charAt(0);
-                switch (yesNo) {
-                    case 'y':
-                    case 'Y':
-                        clearWorkingConsole();
-                        registerNewStudent();
-                        break;
-                    case 'n':
-                    case 'N':
-                        clearWorkingConsole();
-                        mainMenuConsole();
-                        mainMenuInput();
-                        break;
-                    default:
-                        System.out.println("Invalid Value.. Try Again..!");
-                        clearWorkingConsole();
-                        mainMenuConsole();
-                        mainMenuInput();
-                        break;
+                // Handling the exception
+                try {
+                    System.out.print("Added Successfully! Do you want to add another student? [Y/N]: ");
+                    char yesNo = studInput.next().charAt(0);
+                    switch (yesNo) {
+                        case 'y':
+                        case 'Y':
+                            clearWorkingConsole();
+                            registerNewStudent();
+                            break;
+                        case 'n':
+                        case 'N':
+                            clearWorkingConsole();
+                            mainMenuConsole();
+                            mainMenuInput();
+                            break;
+                        default:
+                            System.out.println("Invalid Value.. Try Again..!");
+                            clearWorkingConsole();
+                            mainMenuConsole();
+                            mainMenuInput();
+                            break;
+                    }
+                } catch (InputMismatchException ex) {
+                    System.out.println("Please type a valid input..!!");
+                    clearWorkingConsole();
+                    mainMenuConsole();
+                    mainMenuInput();
                 }
             }
         }
@@ -177,7 +194,7 @@ public class AppInitializer {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
-        System.out.print("\t\t\t\t\t\t\t\tDELETE STUDENT");
+        System.out.print("\t\t\t\t\t\t\t\t\t\tDELETE STUDENT");
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.println("Delete Student");
@@ -188,7 +205,7 @@ public class AppInitializer {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
-        System.out.print("\t\t\t\t\t\t\t\tFIND STUDENT");
+        System.out.print("\t\t\t\t\t\t\t\t\t\tFIND STUDENT");
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.println("Find Student");
@@ -220,7 +237,7 @@ public class AppInitializer {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
-        System.out.print("\t\t\t\t\t\t\t\tVIEW STUDENT LIST");
+        System.out.print("\t\t\t\t\t\t\t\t\tVIEW STUDENT LIST");
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
     }
@@ -228,26 +245,34 @@ public class AppInitializer {
     // Exit the system
     private static void exitTheSystem() {
         Scanner exitNum = new Scanner(System.in);
-        System.out.print("Do you want to the exit the system? [Y/N] >");
-        String yesNo = exitNum.next();
-        switch (yesNo) {
-            case "y":
-            case "Y":
-                clearWorkingConsole();
-                System.exit(0);
-                break;
-            case "n":
-            case "N":
-                clearWorkingConsole();
-                mainMenuConsole();
-                mainMenuInput();
-                break;
-            default:
-                System.out.println("Invalid Value.. Try Again..!");
-                clearWorkingConsole();
-                mainMenuConsole();
-                mainMenuInput();
-                break;
+        try {
+            System.out.print("Do you want to the exit the system? [Y/N] >");
+            char yesNo = exitNum.next().charAt(0);
+            switch (yesNo) {
+                case 'y':
+                case 'Y':
+                    clearWorkingConsole();
+                    System.exit(0);
+                    break;
+                case 'n':
+                case 'N':
+                    clearWorkingConsole();
+                    mainMenuConsole();
+                    mainMenuInput();
+                    break;
+                default:
+                    System.out.println("Invalid Value.. Try Again..!");
+                    clearWorkingConsole();
+                    mainMenuConsole();
+                    mainMenuInput();
+                    break;
+            }
+        } catch (InputMismatchException ex) {
+            System.out.println("Please type a valid input..!!");
+            clearWorkingConsole();
+            mainMenuConsole();
+            mainMenuInput();
+
         }
     }
 
