@@ -107,8 +107,15 @@ public class AppInitializer {
 
     // check the available seats in the array
     private static void checkAvailableSeats() {
+        System.out.print("\n");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
+        System.out.print("|");
+        System.out.print("\t\t\t\t\t\t\t\tCHECKING AVAILABLE SEATS");
+        System.out.println("\t\t\t\t\t\t\t\t\t|");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
         int available_seats = MAX_CAPACITY - studentCount;
         System.out.print("Available Seats: " + available_seats);
+        System.out.println();
         clearWorkingConsole();
         mainMenuConsole();
         mainMenuInput();
