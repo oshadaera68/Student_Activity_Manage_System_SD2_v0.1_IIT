@@ -1,3 +1,6 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -10,14 +13,22 @@ public class AppInitializer {
     // Student Count Variables
     private static final int MAX_CAPACITY = 100; // const variables
     // Student arrays
-    public static String[] studentIds = new String[MAX_CAPACITY];
-    public static String[] studentNames = new String[MAX_CAPACITY];
+    public static String[][] students = new String[MAX_CAPACITY][2]; // 2D array to store both ID and Name
     private static int studentCount = 0;
 
     // Runnable Method
     public static void main(String[] args) {
         mainMenuConsole();
-        mainMenuInput();
+
+        /*Handling the exception*/
+        try {
+            mainMenuInput();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please type the integer input...!");
+            clearWorkingConsole();
+            mainMenuConsole();
+            mainMenuInput();
+        }
     }
 
     // main menu
@@ -58,50 +69,43 @@ public class AppInitializer {
     }
 
     // main menu input method
-    private static void mainMenuInput() {
+    private static void mainMenuInput() throws InputMismatchException {
         Scanner input_number = new Scanner(System.in);
         // Handling the exception
-        try {
-            System.out.print("Enter the option to continue > ");
-            int inputted_num = input_number.nextInt();
-            switch (inputted_num) {
-                case 1:
-                    checkAvailableSeats();
-                    break;
-                case 2:
-                    registerNewStudent();
-                    break;
-                case 3:
-                    deleteStudent();
-                    break;
-                case 4:
-                    findStudent();
-                    break;
-                case 5:
-                    storeStudentDetails();
-                    break;
-                case 6:
-                    loadStudentDetails();
-                    break;
-                case 7:
-                    viewStudentList();
-                    break;
-                case 8:
-                    exitTheSystem();
-                    break;
+        System.out.print("Enter the option to continue > ");
+        int inputted_num = input_number.nextInt();
+        switch (inputted_num) {
+            case 1:
+                checkAvailableSeats();
+                break;
+            case 2:
+                registerNewStudent();
+                break;
+            case 3:
+                deleteStudent();
+                break;
+            case 4:
+                findStudent();
+                break;
+            case 5:
+                storeStudentDetails();
+                break;
+            case 6:
+                loadStudentDetails();
+                break;
+            case 7:
+                viewStudentList();
+                break;
+            case 8:
+                exitTheSystem();
+                break;
 
-                default:
-                    System.out.println("Invalid Input!! Please Try again!!");
-                    clearWorkingConsole();
-                    mainMenuConsole();
-                    mainMenuInput();
-                    break;
-            }
-        } catch (InputMismatchException ex) {
-            System.out.println("Invalid input. Please type the integer input...!");
-            clearWorkingConsole();
-            mainMenuConsole();
-            mainMenuInput();
+            default:
+                System.out.println("Invalid Input!! Please Try again!!");
+                clearWorkingConsole();
+                mainMenuConsole();
+                mainMenuInput();
+                break;
         }
     }
 
@@ -115,7 +119,7 @@ public class AppInitializer {
         System.out.println("+-------------------------------------------------------------------------------------------+");
         int available_seats = MAX_CAPACITY - studentCount;
         System.out.print("Available Seats: " + available_seats);
-        System.out.println();
+        System.out.println("\n");
         clearWorkingConsole();
         mainMenuConsole();
         mainMenuInput();
@@ -123,7 +127,6 @@ public class AppInitializer {
 
     // add the student details
     private static void registerNewStudent() {
-
         // checking the available seats in the student
         if (MAX_CAPACITY >= studentCount) {
             System.out.println("Seats are available");
@@ -140,17 +143,17 @@ public class AppInitializer {
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
         // store values in the array
-        int indexValues = nextIdValues(studentIds);
+        int indexValues = nextIdValues(students);
 
         //  main loop
-        for (int i = indexValues; i < studentIds.length; i++) {
+        for (int i = indexValues; i < students.length; i++) {
             System.out.print("Enter the Student Id: ");
             String sId = studInput.next();
 
             //  check the existing the student id
             boolean studentIdFound = false;
-            for (String studentId : studentIds) {
-                if (sId.equals(studentId)) {
+            for (String[] student : students) {
+                if (sId.equals(student[0])) {
                     System.out.println("The Student id was Already Exists. Please Try again.");
                     studentIdFound = true;
                     break;
@@ -159,41 +162,34 @@ public class AppInitializer {
 
             // if hadn't any exist student id found, this block executed and allow to add the students name.
             if (!studentIdFound) {
-                studentIds[i] = sId;
+                students[i][0] = sId;
                 System.out.print("Enter the Student Name: ");
                 String sName = studInput.next();
-                studentNames[i] = sName;
+                students[i][1] = sName;
                 studentCount++;
 
                 // Handling the exception
-                try {
-                    System.out.println();
-                    System.out.print("Added Successfully! Do you want to add another student? [Y/N]: ");
-                    char yesNo = studInput.next().charAt(0);
-                    switch (yesNo) {
-                        case 'y':
-                        case 'Y':
-                            clearWorkingConsole();
-                            registerNewStudent();
-                            break;
-                        case 'n':
-                        case 'N':
-                            clearWorkingConsole();
-                            mainMenuConsole();
-                            mainMenuInput();
-                            break;
-                        default:
-                            System.out.println("Invalid Value.. Try Again..!");
-                            clearWorkingConsole();
-                            mainMenuConsole();
-                            mainMenuInput();
-                            break;
-                    }
-                } catch (InputMismatchException ex) {
-                    System.out.println("Invalid input. Please type the integer input...!");
-                    clearWorkingConsole();
-                    mainMenuConsole();
-                    mainMenuInput();
+                System.out.println();
+                System.out.print("Added Successfully! Do you want to add another student? [Y/N]: ");
+                char yesNo = studInput.next().charAt(0);
+                switch (yesNo) {
+                    case 'y':
+                    case 'Y':
+                        clearWorkingConsole();
+                        registerNewStudent();
+                        break;
+                    case 'n':
+                    case 'N':
+                        clearWorkingConsole();
+                        mainMenuConsole();
+                        mainMenuInput();
+                        break;
+                    default:
+                        System.out.println("Invalid Value.. Try Again..!");
+                        clearWorkingConsole();
+                        mainMenuConsole();
+                        mainMenuInput();
+                        break;
                 }
             }
         }
@@ -216,8 +212,8 @@ public class AppInitializer {
             boolean studentIdExists = false;
             int studentIndex = -1;
 
-            for (int i = 0; i < studentIds.length; i++) {
-                if (studentId.equals(studentIds[i])) {
+            for (int i = 0; i < students.length; i++) {
+                if (studentId.equals(students[i][0])) {
                     studentIdExists = true;
                     studentIndex = i;
                     break;
@@ -230,19 +226,17 @@ public class AppInitializer {
             }
 
             // Deleting the student
-            String[] tempStudentId = new String[studentIds.length - 1];
-            String[] tempStudentName = new String[studentNames.length - 1];
+            String[][] tempStudents = new String[students.length - 1][2];
 
-            for (int i = 0, j = 0; i < studentIds.length; i++) {
+            for (int i = 0, j = 0; i < students.length; i++) {
                 if (i != studentIndex) {
-                    tempStudentId[j] = studentIds[i];
-                    tempStudentName[j] = studentNames[i];
+                    tempStudents[j][0] = students[i][0];
+                    tempStudents[j][1] = students[i][1];
                     j++;
                 }
             }
 
-            studentIds = tempStudentId;
-            studentNames = tempStudentName;
+            students = tempStudents;
             studentCount--;
 
             try {
@@ -276,7 +270,6 @@ public class AppInitializer {
         }
     }
 
-
     // Find the Student Details
     private static void findStudent() {
         Scanner findStudent = new Scanner(System.in);
@@ -296,9 +289,9 @@ public class AppInitializer {
             boolean studentFound = false;
 
             // inner loop - showing data in the student id
-            for (int i = 0; i < studentIds.length; i++) {
-                if (stuId.equals(studentIds[i])) {
-                    System.out.println("Student Name: " + studentNames[i]);
+            for (int i = 0; i < students.length; i++) {
+                if (stuId.equals(students[i][0])) {
+                    System.out.println("Student Name: " + students[i][1]);
                     studentFound = true;
                     break;
                 }
@@ -348,6 +341,17 @@ public class AppInitializer {
         System.out.print("\t\t\t\t\t\t\t\tSTORE STUDENT DETAILS");
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
+        try (PrintWriter writer = new PrintWriter(new FileWriter("student.txt"))) {
+            for (int i = 0; i < studentCount; i++) {
+                writer.println(students[i][0] + " - " + students[i][1]);
+            }
+            System.out.println("Student details saved to file.");
+        } catch (IOException e) {
+            System.out.println("Error saving student details: " + e.getMessage());
+        }
+        clearWorkingConsole();
+        mainMenuConsole();
+        mainMenuInput();
     }
 
     // Load the student details using file
@@ -404,10 +408,10 @@ public class AppInitializer {
     }
 
     // store values in the array
-    public static int nextIdValues(String[] id) {
-        int array = id.length;
-        for (int i = 0; i < id.length; i++) {
-            if (id[i] == null) {
+    public static int nextIdValues(String[][] students) {
+        int array = students.length;
+        for (int i = 0; i < students.length; i++) {
+            if (students[i][0] == null) {
                 array = i;
                 break;
             }
