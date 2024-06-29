@@ -222,6 +222,7 @@ public class AppInitializer {
                 }
             }
 
+            // if hadn't any exist student id found
             if (!studentIdExists) {
                 System.out.println("Student Id Not Exists. Try again.");
                 continue;
