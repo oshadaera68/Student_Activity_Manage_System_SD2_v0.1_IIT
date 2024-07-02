@@ -1,6 +1,6 @@
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+package task1;
+
+import java.io.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -73,7 +73,6 @@ public class AppInitializer {
     // main menu input method
     private static void mainMenuInput() throws InputMismatchException {
         Scanner input_number = new Scanner(System.in);
-        // Handling the exception
         System.out.print("Enter the option to continue > ");
         int inputted_num = input_number.nextInt();
         switch (inputted_num) {
@@ -96,7 +95,7 @@ public class AppInitializer {
                 loadStudentDetails();
                 break;
             case 7:
-                viewStudentList();
+                viewStudentListByName();
                 break;
             case 8:
                 exitTheSystem();
@@ -119,6 +118,8 @@ public class AppInitializer {
         System.out.print("\t\t\t\t\t\t\t\tCHECKING AVAILABLE SEATS");
         System.out.println("\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
+
+        // checking the available seats
         int available_seats = MAX_CAPACITY - studentCount;
         System.out.print("Available Seats: " + available_seats);
         System.out.println("\n");
@@ -285,9 +286,9 @@ public class AppInitializer {
             boolean studentFound = false;
 
             // inner loop - showing data in the student id
-            for (int i = 0; i < students.length; i++) {
-                if (stuId.equals(students[i][0])) {
-                    System.out.println("Student Name: " + students[i][1]);
+            for (String[] student : students) {
+                if (stuId.equals(student[0])) {
+                    System.out.println("Student Name: " + student[1]);
                     studentFound = true;
                     break;
                 }
@@ -331,14 +332,14 @@ public class AppInitializer {
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
-        //writing the data in the file
-        try (PrintWriter studentWriter = new PrintWriter(new FileWriter("student.txt"))) {
+        // writing the data in the file
+        try (FileWriter fileWriter = new FileWriter("src/student.txt")) {
             for (int i = 0; i < studentCount; i++) {
-                studentWriter.println(students[i][0] + " - " + students[i][1]);
+                fileWriter.write(students[i][0] + " - " + students[i][1] + "\n"); // write to the file
             }
             System.out.println("All Student Details are saved successfully.");
         } catch (IOException e) {
-            System.out.println("I got this error: " + e.getMessage() + "please fix it.");
+            System.out.println("I got this error: " + e.getMessage() + " please fix it.");
         }
         clearWorkingConsole();
         mainMenuConsole();
@@ -353,16 +354,56 @@ public class AppInitializer {
         System.out.print("\t\t\t\t\t\t\t\tLOAD STUDENT DETAILS");
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
+
+        //loading the data from the file
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/student.txt"))) {
+            for (int i = 0; i < studentCount; i++) {
+                students[i][0] = reader.readLine(); //read from the file
+                students[i][1] = reader.readLine();
+            }
+            System.out.println("Student details loaded from file.");
+        } catch (IOException e) {
+            System.out.println("Error loading student details: " + e.getMessage());
+        }
+        clearWorkingConsole();
+        mainMenuConsole();
+        mainMenuInput();
     }
 
     // View the list of students
-    private static void viewStudentList() {
+    private static void viewStudentListByName() {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
         System.out.print("\t\t\t\t\t\t\t\t\tVIEW STUDENT LIST");
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
+        if (studentCount == 0) {
+            System.out.println("No students are registered.");
+        } else {
+            // Bubble Sort students by name
+            for (int i = 0; i < studentCount - 1; i++) {
+                for (int j = 0; j < studentCount - 1 - i; j++) {
+                    if (students[j][1] != null && students[j + 1][1] != null) {
+                        if (students[j][1].compareTo(students[j + 1][1]) > 0) {
+                            String[] temp = students[j];
+                            students[j] = students[j + 1];
+                            students[j + 1] = temp;
+                        }
+                    }
+                }
+            }
+
+            // Display sorted students
+            for (int i = 0; i < studentCount; i++) {
+                if (students[i][0] != null && students[i][1] != null) {
+                    System.out.println(students[i][0] + " - " + students[i][1]);
+                }
+            }
+        }
+        clearWorkingConsole();
+        mainMenuConsole();
+        mainMenuInput();
     }
 
     // Exit the system
