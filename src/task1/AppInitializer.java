@@ -20,21 +20,18 @@ public class AppInitializer {
 
     // Runnable Method
     public static void main(String[] args) {
-        mainMenuConsole();
-
         /*Handling the exception*/
         try {
-            mainMenuInput();
+            mainMenuConsole();
         } catch (InputMismatchException e) {
             System.out.println("Invalid input. Please type the integer input...!");
             clearWorkingConsole();
             mainMenuConsole();
-            mainMenuInput();
         }
     }
 
     // main menu
-    private static void mainMenuConsole() {
+    private static void mainMenuConsole() throws InputMismatchException {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
@@ -42,6 +39,7 @@ public class AppInitializer {
         System.out.println("\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
+        // Menu Items
         System.out.print("[1]: Check Available Seats\t\t\t\t\t\t\t\t");
         System.out.println("[2]: Register Student");
         System.out.print("[3]: Delete Student\t\t\t\t\t\t\t\t\t\t");
@@ -51,27 +49,8 @@ public class AppInitializer {
         System.out.print("[7]: View the list of students\t\t\t\t\t\t\t");
         System.out.println("[8]: Exit");
         System.out.println();
-    }
 
-    // clearing console
-    private static void clearWorkingConsole() {
-        final String os = System.getProperty("os.name");
-        try {
-            if (os.equals("Linux")) {
-                System.out.print("\033\143");
-            } else if (os.equals("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
-                System.out.print("\033[H\033[2J");
-                System.out.flush();
-            }
-        } catch (final Exception e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
-    // main menu input method
-    private static void mainMenuInput() throws InputMismatchException {
+        // User Input
         Scanner input_number = new Scanner(System.in);
         System.out.print("Enter the option to continue > ");
         int inputted_num = input_number.nextInt();
@@ -105,10 +84,28 @@ public class AppInitializer {
                 System.out.println("Invalid Input!! Please Try again!!");
                 clearWorkingConsole();
                 mainMenuConsole();
-                mainMenuInput();
                 break;
         }
     }
+
+    // clearing console
+    private static void clearWorkingConsole() {
+        final String os = System.getProperty("os.name");
+        try {
+            if (os.equals("Linux")) {
+                System.out.print("\033\143");
+            } else if (os.equals("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (final Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    // main menu input method
 
     // check the available seats in the array
     private static void checkAvailableSeats() {
@@ -125,7 +122,6 @@ public class AppInitializer {
         System.out.println("\n");
         clearWorkingConsole();
         mainMenuConsole();
-        mainMenuInput();
     }
 
     // add the student details
@@ -185,13 +181,11 @@ public class AppInitializer {
                     case 'N':
                         clearWorkingConsole();
                         mainMenuConsole();
-                        mainMenuInput();
                         break;
                     default:
                         System.out.println("Invalid Value.. Try Again..!");
                         clearWorkingConsole();
                         mainMenuConsole();
-                        mainMenuInput();
                         break;
                 }
             }
@@ -255,13 +249,11 @@ public class AppInitializer {
                 case 'N':
                     clearWorkingConsole();
                     mainMenuConsole();
-                    mainMenuInput();
                     return;
                 default:
                     System.out.println("Invalid value...Please try again!!!");
                     clearWorkingConsole();
                     mainMenuConsole();
-                    mainMenuInput();
                     return;
             }
         }
@@ -313,13 +305,11 @@ public class AppInitializer {
             case 'N':
                 clearWorkingConsole();
                 mainMenuConsole();
-                mainMenuInput();
                 return;
             default:
                 System.out.println("Invalid value...Please try again!!!");
                 clearWorkingConsole();
                 mainMenuConsole();
-                mainMenuInput();
         }
     }
 
@@ -343,7 +333,6 @@ public class AppInitializer {
         }
         clearWorkingConsole();
         mainMenuConsole();
-        mainMenuInput();
     }
 
     // Load the student details using file
@@ -367,7 +356,6 @@ public class AppInitializer {
         }
         clearWorkingConsole();
         mainMenuConsole();
-        mainMenuInput();
     }
 
     // View the list of students
@@ -378,8 +366,12 @@ public class AppInitializer {
         System.out.print("\t\t\t\t\t\t\t\t\tVIEW STUDENT LIST");
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
+
+        // checking the students: It true printing the students, It false give the chance for add new students
         if (studentCount == 0) {
             System.out.println("No students are registered.");
+            clearWorkingConsole();
+            registerNewStudent();
         } else {
             // Bubble Sort students by name
             for (int i = 0; i < studentCount - 1; i++) {
@@ -403,7 +395,6 @@ public class AppInitializer {
         }
         clearWorkingConsole();
         mainMenuConsole();
-        mainMenuInput();
     }
 
     // Exit the system
@@ -421,13 +412,11 @@ public class AppInitializer {
             case 'N':
                 clearWorkingConsole();
                 mainMenuConsole();
-                mainMenuInput();
                 break;
             default:
                 System.out.println("Invalid Value.. Try Again..!");
                 clearWorkingConsole();
                 mainMenuConsole();
-                mainMenuInput();
                 break;
         }
     }

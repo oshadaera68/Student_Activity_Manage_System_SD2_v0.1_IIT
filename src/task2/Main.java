@@ -9,6 +9,74 @@ import java.io.*;
  * Version: v0.1.0
  **/
 
+// Module Class
+class Module {
+    private int marks;
+    private String grade;
+
+    public Module() {
+    }
+
+    public Module(int marks) {
+        this.marks = marks;
+        this.grade = calculateGrade(marks);
+    }
+
+    private String calculateGrade(int marks) {
+        if (marks >= 80) {
+            return "Distinction";
+        } else if (marks >= 70) {
+            return "Merit";
+        } else if (marks >= 40) {
+            return "Pass";
+        } else {
+            return "Fail";
+        }
+    }
+
+    public int getMarks() {
+        return marks;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+}
+
+// Student Class
+class Student {
+    private final String id;
+    private final String name;
+    private Module[] modules;
+
+    public Student(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Student(String id, String name, int[] marks) {
+        this.id = id;
+        this.name = name;
+        this.modules = new Module[3];
+        for (int i = 0; i < 3; i++) {
+            this.modules[i] = new Module(marks[i]);
+        }
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Module[] getModules() {
+        return modules;
+    }
+}
+
+// Main Class
 public class Main {
     // Student Count Variables
     private static final int MAX_CAPACITY = 100;
@@ -20,21 +88,18 @@ public class Main {
 
     // Runnable Method
     public static void main(String[] args) {
-        mainMenuConsole();
-
         /*Handling the exception*/
         try {
-            mainMenuInput();
+            mainMenuConsole();
         } catch (InputMismatchException e) {
             System.out.println("Invalid input. Please type the integer input...!");
             clearWorkingConsole();
             mainMenuConsole();
-            mainMenuInput();
         }
     }
 
     // main menu commands
-    private static void mainMenuConsole() {
+    private static void mainMenuConsole() throws InputMismatchException {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
@@ -42,6 +107,7 @@ public class Main {
         System.out.println("\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
+        // Menu List
         System.out.print("[1]: Check Available Seats\t\t\t\t\t\t\t\t");
         System.out.println("[2]: Register Student");
         System.out.print("[3]: Delete Student\t\t\t\t\t\t\t\t\t\t");
@@ -49,32 +115,12 @@ public class Main {
         System.out.print("[5]: Store Student Details (within the file)\t\t\t");
         System.out.println("[6]: Load Student Details (from the file)");
         System.out.print("[7]: View the list of students\t\t\t\t\t\t\t");
-        System.out.println("[8]: Add Module Marks to the students");
+        System.out.println("[8]: Add Module Marks to the students"); // Added New Item
         System.out.print("[9]:Exit \t\t\t\t");
         System.out.println();
         System.out.println();
 
-    }
-
-    // clearing console
-    private static void clearWorkingConsole() {
-        final String os = System.getProperty("os.name");
-        try {
-            if (os.equals("Linux")) {
-                System.out.print("\033\143");
-            } else if (os.equals("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
-                System.out.print("\033[H\033[2J");
-                System.out.flush();
-            }
-        } catch (final Exception e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
-    // main menu input method
-    private static void mainMenuInput() throws InputMismatchException {
+        // menu input
         Scanner input_number = new Scanner(System.in);
         System.out.print("Enter the option to continue > ");
         int inputted_num = input_number.nextInt();
@@ -111,8 +157,25 @@ public class Main {
                 System.out.println("Invalid Input!! Please Try again!!");
                 clearWorkingConsole();
                 mainMenuConsole();
-                mainMenuInput();
                 break;
+        }
+
+    }
+
+    // clearing console
+    private static void clearWorkingConsole() {
+        final String os = System.getProperty("os.name");
+        try {
+            if (os.equals("Linux")) {
+                System.out.print("\033\143");
+            } else if (os.equals("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (final Exception e) {
+            System.err.println(e.getMessage());
         }
     }
 
@@ -131,7 +194,6 @@ public class Main {
         System.out.println("\n");
         clearWorkingConsole();
         mainMenuConsole();
-        mainMenuInput();
     }
 
     // add the student details
@@ -185,19 +247,17 @@ public class Main {
             case 'y':
             case 'Y':
                 clearWorkingConsole();
-                deleteStudent();
+                registerNewStudent();
                 return;
             case 'n':
             case 'N':
                 clearWorkingConsole();
                 mainMenuConsole();
-                mainMenuInput();
                 return;
             default:
                 System.out.println("Invalid value...Please try again!!!");
                 clearWorkingConsole();
                 mainMenuConsole();
-                mainMenuInput();
         }
     }
 
@@ -233,19 +293,13 @@ public class Main {
                     case 'N':
                         clearWorkingConsole();
                         mainMenuConsole();
-                        mainMenuInput();
                         return;
                     default:
                         System.out.println("Invalid value...Please try again!!!");
                         clearWorkingConsole();
                         mainMenuConsole();
-                        mainMenuInput();
                         return;
                 }
-            } else {
-                System.out.print("Not any Student Id. Please Try again.");
-                clearWorkingConsole();
-                deleteStudent();
             }
         }
     }
@@ -282,18 +336,16 @@ public class Main {
                     case 'N':
                         clearWorkingConsole();
                         mainMenuConsole();
-                        mainMenuInput();
                         return;
                     default:
                         System.out.println("Invalid value...Please try again!!!");
                         clearWorkingConsole();
                         mainMenuConsole();
-                        mainMenuInput();
                 }
             } else {
                 System.out.println("Student is not found. Please Try Again.");
                 clearWorkingConsole();
-                findStudent();
+                mainMenuConsole();
             }
         }
     }
@@ -321,10 +373,9 @@ public class Main {
         }
         clearWorkingConsole();
         mainMenuConsole();
-        mainMenuInput();
     }
 
-
+    // Load Student details
     private static void loadStudentDetails() {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
@@ -333,20 +384,35 @@ public class Main {
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
-        // Loading the data from the file
         try (BufferedReader studentReader = new BufferedReader(new FileReader("src/task2/student.txt"))) {
             studentCount = 0; // Reset student count
             String line;
             while ((line = studentReader.readLine()) != null) {
+                // split the lines
                 String[] studentInfo = line.split(" - ");
+                if (studentInfo.length < 2) {
+                    System.out.println("Invalid student info format: " + line);
+                    continue;
+                }
                 String sId = studentInfo[0];
                 String sName = studentInfo[1];
 
                 int[] marks = new int[3];
                 for (int i = 0; i < 3; i++) {
                     line = studentReader.readLine();
+
+                    if (line == null) {
+                        System.out.println("Unexpected end of file while reading marks for " + sId);
+                        return;
+                    }
+                    // Adjust the split to account for extra text
                     String[] moduleInfo = line.split(" ");
-                    marks[i] = Integer.parseInt(moduleInfo[2]);
+                    try {
+                        marks[i] = Integer.parseInt(moduleInfo[3].replace(",", ""));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Error parsing marks from line: " + line);
+                        return;
+                    }
                 }
 
                 students[studentCount] = new Student(sId, sName, marks);
@@ -355,12 +421,9 @@ public class Main {
             System.out.println("All Student Details are loaded successfully.");
         } catch (IOException e) {
             System.out.println("I got this error: " + e.getMessage() + " please fix it.");
-        } catch (NumberFormatException e) {
-            System.out.println("Error parsing student marks: " + e.getMessage());
         }
         clearWorkingConsole();
         mainMenuConsole();
-        mainMenuInput();
     }
 
     // View the list of students
@@ -374,7 +437,8 @@ public class Main {
         if (studentCount == 0) {
             System.out.println("No students are registered.");
         } else {
-            // Bubble Sort students by name
+
+            // Sorting the students by name using Bubble Sort
             for (int i = 0; i < studentCount - 1; i++) {
                 for (int j = 0; j < studentCount - 1 - i; j++) {
                     if (students[j].getName().compareTo(students[j + 1].getName()) > 0) {
@@ -392,7 +456,6 @@ public class Main {
         }
         clearWorkingConsole();
         mainMenuConsole();
-        mainMenuInput();
     }
 
     private static void manageStudentMarks() {
@@ -414,7 +477,7 @@ public class Main {
 
         switch (option) {
             case 1:
-                registerNewStudent();
+                addNewStudent();
                 break;
             case 2:
                 addModuleMarks();
@@ -425,7 +488,6 @@ public class Main {
             case 4:
                 clearWorkingConsole();
                 mainMenuConsole();
-                mainMenuInput();
                 break;
             default:
                 System.out.println("Invalid Input! Please Try again.");
@@ -435,29 +497,53 @@ public class Main {
         }
     }
 
-    // Exit the system
-    private static void exitTheSystem() {
-        Scanner exitNum = new Scanner(System.in);
-        System.out.print("Do you want to the exit the system? [Y/N] >");
-        char yesNo = exitNum.next().charAt(0);
-        switch (yesNo) {
+    private static void addNewStudent() {
+        Scanner studInput = new Scanner(System.in);
+        System.out.print("\n");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
+        System.out.print("|");
+        System.out.print("\t\t\t\t\t\t\t\tREGISTER NEW STUDENT");
+        System.out.println("\t\t\t\t\t\t\t\t\t\t|");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
+
+        // Enter the student id
+        System.out.print("Enter the Student Id: ");
+        String sId = studInput.next();
+
+        // Checking the student id exists or not
+        for (Student student : students) {
+            if (student != null && sId.equals(student.getId()) && sId.length() == 8) {
+                System.out.println("The Student id already exists. Please try again.");
+                clearWorkingConsole();
+                addNewStudent();
+                return;
+            }
+        }
+
+        // Enter the student name
+        System.out.print("Enter the Student Name: ");
+        String sName = studInput.next();
+
+        students[studentCount] = new Student(sId, sName);
+        studentCount++;
+
+        System.out.print("Added Successfully. Do you want to add another student? (Y/N) : ");
+        char ch = studInput.next().charAt(0);
+        switch (ch) {
             case 'y':
             case 'Y':
                 clearWorkingConsole();
-                System.exit(0);
-                break;
+                addNewStudent();
+                return;
             case 'n':
             case 'N':
                 clearWorkingConsole();
-                mainMenuConsole();
-                mainMenuInput();
-                break;
+                manageStudentMarks();
+                return;
             default:
-                System.out.println("Invalid Value.. Try Again..!");
+                System.out.println("Invalid value...Please try again!!!");
                 clearWorkingConsole();
                 mainMenuConsole();
-                mainMenuInput();
-                break;
         }
     }
 
@@ -474,6 +560,8 @@ public class Main {
                 }
             }
         }
+        clearWorkingConsole();
+        mainMenuConsole();
     }
 
     private static void addModuleMarks() {
@@ -507,19 +595,42 @@ public class Main {
                     case 'n':
                     case 'N':
                         clearWorkingConsole();
-                        mainMenuConsole();
-                        mainMenuInput();
+                        manageStudentMarks();
                         return;
                     default:
                         System.out.println("Invalid value...Please try again!!!");
                         clearWorkingConsole();
                         mainMenuConsole();
-                        mainMenuInput();
                 }
             }
         }
         System.out.println("Student Id Not Exists. Try again.");
         clearWorkingConsole();
         addModuleMarks();
+    }
+
+
+    // Exit the system
+    private static void exitTheSystem() {
+        Scanner exitNum = new Scanner(System.in);
+        System.out.print("Do you want to the exit the system? [Y/N] >");
+        char yesNo = exitNum.next().charAt(0);
+        switch (yesNo) {
+            case 'y':
+            case 'Y':
+                clearWorkingConsole();
+                System.exit(0);
+                break;
+            case 'n':
+            case 'N':
+                clearWorkingConsole();
+                mainMenuConsole();
+                break;
+            default:
+                System.out.println("Invalid Value.. Try Again..!");
+                clearWorkingConsole();
+                mainMenuConsole();
+                break;
+        }
     }
 }
