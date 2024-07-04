@@ -22,6 +22,7 @@ public class Student {
         }
     }
 
+
     public String getId() {
         return id;
     }
@@ -29,7 +30,6 @@ public class Student {
     public String getName() {
         return name;
     }
-
 
     public Module[] getModules() {
         return modules;

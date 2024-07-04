@@ -333,7 +333,7 @@ public class AppInitializer {
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
         // writing the data in the file
-        try (FileWriter fileWriter = new FileWriter("src/student.txt")) {
+        try (FileWriter fileWriter = new FileWriter("src/task1/student.txt")) {
             for (int i = 0; i < studentCount; i++) {
                 fileWriter.write(students[i][0] + " - " + students[i][1] + "\n"); // write to the file
             }
@@ -356,7 +356,7 @@ public class AppInitializer {
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
         //loading the data from the file
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/student.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/task1/student.txt"))) {
             for (int i = 0; i < studentCount; i++) {
                 students[i][0] = reader.readLine(); //read from the file
                 students[i][1] = reader.readLine();
