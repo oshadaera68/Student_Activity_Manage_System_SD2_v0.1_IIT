@@ -12,26 +12,26 @@ import java.util.Scanner;
 public class AppInitializer {
     // Student Count Variables
     private static final int MAX_CAPACITY = 100;
-    // Student 2D array
-    public static String[][] students = new String[MAX_CAPACITY][2];
+    // 2D array to store student details
+    public static String[][] studentData = new String[MAX_CAPACITY][2];
 
-    // counting variable
-    private static int studentCount = 0;
+    // Counter for number of students
+    private static int currentStudentCount = 0;
 
-    // Runnable Method
+    // Main executable method
     public static void main(String[] args) {
-        /*Handling the exception*/
+        /* Handle potential input exceptions */
         try {
-            mainMenuConsole();
+            displayMainMenu();
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input. Please type the integer input...!");
+            System.out.println("Invalid input. Please enter a valid number.");
             clearWorkingConsole();
-            mainMenuConsole();
+            displayMainMenu();
         }
     }
 
     // main menu
-    private static void mainMenuConsole() throws InputMismatchException {
+    public static void displayMainMenu() throws InputMismatchException {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
@@ -83,7 +83,7 @@ public class AppInitializer {
             default:
                 System.out.println("Invalid Input!! Please Try again!!");
                 clearWorkingConsole();
-                mainMenuConsole();
+                displayMainMenu();
                 break;
         }
     }
@@ -105,8 +105,6 @@ public class AppInitializer {
         }
     }
 
-    // main menu input method
-
     // check the available seats in the array
     private static void checkAvailableSeats() {
         System.out.print("\n");
@@ -116,18 +114,18 @@ public class AppInitializer {
         System.out.println("\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
-        // checking the available seats
-        int available_seats = MAX_CAPACITY - studentCount;
-        System.out.print("Available Seats: " + available_seats);
+        // Calculate available seats
+        int availableSeats = MAX_CAPACITY - currentStudentCount;
+        System.out.print("Seats Available: " + availableSeats);
         System.out.println("\n");
         clearWorkingConsole();
-        mainMenuConsole();
+        displayMainMenu();
     }
 
     // add the student details
     private static void registerNewStudent() {
         // checking the available seats in the student
-        if (MAX_CAPACITY >= studentCount) {
+        if (MAX_CAPACITY >= currentStudentCount) {
             System.out.println("Seats are available");
         } else {
             System.out.println("Seats are not available. Please try to the removing the one or more students.");
@@ -141,31 +139,31 @@ public class AppInitializer {
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
-        // store values in the array
-        int indexValues = nextIdValues(students);
+        // Find the next available index
+        int nextIndex = nextIdValues(studentData);
 
-        //  main loop
-        for (int i = indexValues; i < students.length; i++) {
-            System.out.print("Enter the Student Id: ");
-            String sId = studInput.next();
+        // Main loop
+        for (int i = nextIndex; i < studentData.length; i++) {
+            System.out.print("Enter Student Id: ");
+            String studentId = studInput.next();
 
-            //  check the existing the student id
-            boolean studentIdFound = false;
-            for (String[] student : students) {
-                if (sId.equals(student[0])) {
-                    System.out.println("The Student id was Already Exists. Please Try again.");
-                    studentIdFound = true;
+            // Check for existing student id
+            boolean idExists = false;
+            for (String[] student : studentData) {
+                if (studentId.equals(student[0])) {
+                    System.out.println("Student ID already exists. Please try again.");
+                    idExists = true;
                     break;
                 }
             }
 
-            // if hadn't any exist student id found, this block executed and allow to add the students name.
-            if (!studentIdFound) {
-                students[i][0] = sId;
-                System.out.print("Enter the Student Name: ");
-                String sName = studInput.next();
-                students[i][1] = sName;
-                studentCount++;
+            // If id does not exist, add student
+            if (!idExists) {
+                studentData[i][0] = studentId;
+                System.out.print("Enter Student Name: ");
+                String studentName = studInput.next();
+                studentData[i][1] = studentName;
+                currentStudentCount++;
 
                 // Handling the exception
                 System.out.println();
@@ -180,12 +178,12 @@ public class AppInitializer {
                     case 'n':
                     case 'N':
                         clearWorkingConsole();
-                        mainMenuConsole();
+                        displayMainMenu();
                         break;
                     default:
                         System.out.println("Invalid Value.. Try Again..!");
                         clearWorkingConsole();
-                        mainMenuConsole();
+                        displayMainMenu();
                         break;
                 }
             }
@@ -203,40 +201,42 @@ public class AppInitializer {
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
         while (true) {
-            System.out.print("Enter the Student Id: ");
+            System.out.print("Enter Student Id: ");
             String studentId = deleteStudent.next();
 
-            boolean studentIdExists = false;
+            boolean idFound = false;
             int studentIndex = -1;
 
-            for (int i = 0; i < students.length; i++) {
-                if (studentId.equals(students[i][0])) {
-                    studentIdExists = true;
+            // Search for student by ID
+            for (int i = 0; i < studentData.length; i++) {
+                if (studentId.equals(studentData[i][0])) {
+                    idFound = true;
                     studentIndex = i;
                     break;
                 }
             }
 
-            // if hadn't any exist student id found
-            if (!studentIdExists) {
-                System.out.println("Student Id Not Exists. Try again.");
+            // If student ID not found
+            if (!idFound) {
+                System.out.println("Student ID not found. Try again.");
                 continue;
             }
 
-            // Deleting the student
-            String[][] tempStudents = new String[students.length - 1][2];
-
-            for (int i = 0, j = 0; i < students.length; i++) {
+            // Remove student from array
+            String[][] tempData = new String[studentData.length - 1][2];
+            for (int i = 0, j = 0; i < studentData.length; i++) {
                 if (i != studentIndex) {
-                    tempStudents[j][0] = students[i][0];
-                    tempStudents[j][1] = students[i][1];
+                    tempData[j][0] = studentData[i][0];
+                    tempData[j][1] = studentData[i][1];
                     j++;
                 }
             }
 
-            students = tempStudents;
-            studentCount--;
+            // Update student data array and count
+            studentData = tempData;
+            currentStudentCount--;
 
+            // Asking the user if they want to delete another student
             System.out.print("Deleted Successfully. Do you want to delete another student? (Y/N) : ");
             char ch = deleteStudent.next().charAt(0);
             switch (ch) {
@@ -248,12 +248,12 @@ public class AppInitializer {
                 case 'n':
                 case 'N':
                     clearWorkingConsole();
-                    mainMenuConsole();
+                    displayMainMenu();
                     return;
                 default:
                     System.out.println("Invalid value...Please try again!!!");
                     clearWorkingConsole();
-                    mainMenuConsole();
+                    displayMainMenu();
                     return;
             }
         }
@@ -269,27 +269,28 @@ public class AppInitializer {
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
-        boolean validStudentId = false;
+        boolean validId = false;
 
-        // check the valid student id
-        while (!validStudentId) {
-            System.out.print("Enter the Student Id: ");
-            String stuId = findStudent.next();
+        // Loop to search student by ID
+        while (!validId) {
+            System.out.print("Enter Student Id: ");
+            String studentId = findStudent.next();
             boolean studentFound = false;
 
-            // inner loop - showing data in the student id
-            for (String[] student : students) {
-                if (stuId.equals(student[0])) {
+            // Search for student
+            for (String[] student : studentData) {
+                if (studentId.equals(student[0])) {
                     System.out.println("Student Name: " + student[1]);
                     studentFound = true;
                     break;
                 }
             }
 
+            // If student not found
             if (!studentFound) {
-                System.out.println("Student is not found. Please Try Again.");
+                System.out.println("Student not found. Please try again.");
             } else {
-                validStudentId = true;
+                validId = true;
             }
         }
 
@@ -304,16 +305,16 @@ public class AppInitializer {
             case 'n':
             case 'N':
                 clearWorkingConsole();
-                mainMenuConsole();
+                displayMainMenu();
                 return;
             default:
                 System.out.println("Invalid value...Please try again!!!");
                 clearWorkingConsole();
-                mainMenuConsole();
+                displayMainMenu();
         }
     }
 
-    //Store the student details using file
+    // Store the student details using file
     private static void storeStudentDetails() {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
@@ -321,19 +322,24 @@ public class AppInitializer {
         System.out.print("\t\t\t\t\t\t\t\tSTORE STUDENT DETAILS");
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
-
-        // writing the data in the file
+        // Writing the data in the file
         try (FileWriter fileWriter = new FileWriter("src/task1/student.txt")) {
-            for (int i = 0; i < studentCount; i++) {
-                fileWriter.write(students[i][0] + " - " + students[i][1] + "\n"); // write to the file
+            // Iterate through the students array and write each student's details to the file
+            for (int i = 0; i < currentStudentCount; i++) {
+                fileWriter.write(studentData[i][0] + " - " + studentData[i][1] + "\n"); // write to the file
             }
+            // Print a success message after writing all student details
             System.out.println("All Student Details are saved successfully.");
         } catch (IOException e) {
-            System.out.println("I got this error: " + e.getMessage() + " please fix it.");
+            // Print an error message if an IOException occurs
+            System.out.println("I got this error: " + e.getMessage());
         }
+
+        System.out.println("\n");
         clearWorkingConsole();
-        mainMenuConsole();
+        displayMainMenu();
     }
+
 
     // Load the student details using file
     private static void loadStudentDetails() {
@@ -344,18 +350,34 @@ public class AppInitializer {
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
-        //loading the data from the file
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/task1/student.txt"))) {
-            for (int i = 0; i < studentCount; i++) {
-                students[i][0] = reader.readLine(); //read from the file
-                students[i][1] = reader.readLine();
+        // Loading the data from the file
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader("src/task1/student.txt"));
+            // Iterate through the students array and read each student's details from the file
+            for (int i = 0; i < currentStudentCount; i++) {
+                studentData[i][0] = reader.readLine(); // read student ID from the file
+                studentData[i][1] = reader.readLine(); // read student name from the file
             }
+            // Print a success message after loading all student details
             System.out.println("Student details loaded from file.");
         } catch (IOException e) {
+            // Print an error message if an IOException occurs
             System.out.println("Error loading student details: " + e.getMessage());
+        } finally {
+            // Close the reader if it was opened
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    System.out.println("Error closing reader: " + e.getMessage());
+                }
+            }
         }
+
+        System.out.println("\n");
         clearWorkingConsole();
-        mainMenuConsole();
+        displayMainMenu();
     }
 
     // View the list of students
@@ -367,35 +389,41 @@ public class AppInitializer {
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
-        // checking the students: It true printing the students, It false give the chance for add new students
-        if (studentCount == 0) {
+        // Checking if there are any students registered
+        if (currentStudentCount == 0) {
+            // If no students are registered, prompt the user to register new students
             System.out.println("No students are registered.");
             clearWorkingConsole();
             registerNewStudent();
         } else {
-            // Bubble Sort students by name
-            for (int i = 0; i < studentCount - 1; i++) {
-                for (int j = 0; j < studentCount - 1 - i; j++) {
-                    if (students[j][1] != null && students[j + 1][1] != null) {
-                        if (students[j][1].compareTo(students[j + 1][1]) > 0) {
-                            String[] temp = students[j];
-                            students[j] = students[j + 1];
-                            students[j + 1] = temp;
+            // If there are students, sort them by name using bubble sort
+            for (int i = 0; i < currentStudentCount - 1; i++) {
+                for (int j = 0; j < currentStudentCount - 1 - i; j++) {
+                    if (studentData[j][1] != null && studentData[j + 1][1] != null) {
+                        // Compare adjacent students' names and swap if needed (case insensitive)
+                        if (studentData[j][1].compareToIgnoreCase(studentData[j + 1][1]) > 0) {
+                            String[] temp = studentData[j];
+                            studentData[j] = studentData[j + 1];
+                            studentData[j + 1] = temp;
                         }
                     }
                 }
             }
 
-            // Display sorted students
-            for (int i = 0; i < studentCount; i++) {
-                if (students[i][0] != null && students[i][1] != null) {
-                    System.out.println(students[i][0] + " - " + students[i][1]);
+            // Display the sorted list of students
+            for (int i = 0; i < currentStudentCount; i++) {
+                if (studentData[i][0] != null && studentData[i][1] != null) {
+                    // Capitalize the first letter of each name
+                    String studentName = studentData[i][1].substring(0, 1).toUpperCase() + studentData[i][1].substring(1).toLowerCase();
+                    System.out.println(studentData[i][0] + " - " + studentName);
                 }
             }
         }
+        // Clear the console and return to the main menu
         clearWorkingConsole();
-        mainMenuConsole();
+        displayMainMenu();
     }
+
 
     // Exit the system
     private static void exitTheSystem() {
@@ -411,25 +439,31 @@ public class AppInitializer {
             case 'n':
             case 'N':
                 clearWorkingConsole();
-                mainMenuConsole();
+                displayMainMenu();
                 break;
             default:
                 System.out.println("Invalid Value.. Try Again..!");
                 clearWorkingConsole();
-                mainMenuConsole();
+                displayMainMenu();
                 break;
         }
     }
 
-    // store values in the array
+    // Get the next available index for storing values in the students array
     public static int nextIdValues(String[][] students) {
+        // Initialize the array index to the length of the students array
         int array = students.length;
+
+        // Iterate through the students array to find the first null value
         for (int i = 0; i < students.length; i++) {
+            // If a null value is found, set the array index to the current index
             if (students[i][0] == null) {
                 array = i;
                 break;
             }
         }
+
+        // Return the next available index
         return array;
     }
 }
