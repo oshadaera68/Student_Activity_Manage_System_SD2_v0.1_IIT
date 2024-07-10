@@ -9,14 +9,10 @@ import java.io.*;
  * Version: v0.1.0
  **/
 
-
 // Module Class
 class Module {
     private int marks;
     private String grade;
-
-    public Module() {
-    }
 
     public Module(int marks) {
         this.marks = marks;
@@ -41,6 +37,14 @@ class Module {
 
     public String getGrade() {
         return grade;
+    }
+
+    public void setMarks(int marks) {
+        this.marks = marks;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 }
 
@@ -75,14 +79,25 @@ class Student {
     public Module[] getModules() {
         return modules;
     }
+
+    public void setModules(int[] marks) {
+        this.modules = new Module[3];
+        for (int i = 0; i < 3; i++) {
+            this.modules[i] = new Module(marks[i]);
+        }
+    }
+
+    public void setModules(Module[] modules) {
+        this.modules = modules;
+    }
 }
 
 // Main Program - Student Activity Management
-public class App {
+public class Task2 {
     // Student Count Variables
     private static final int MAX_CAPACITY = 100;
     // Student Class Array
-    private static final Student[] students = new Student[MAX_CAPACITY];
+    private static final Student[] studentArray = new Student[MAX_CAPACITY];
 
     // counting variable
     private static int studentCount = 0;
@@ -215,11 +230,11 @@ public class App {
 
         // Enter the student id
         System.out.print("Enter the Student Id: ");
-        String sId = studInput.next();
+        String studentId = studInput.next();
 
         // Checking the student id exists or not
-        for (Student student : students) {
-            if (student != null && sId.equals(student.getId()) && sId.length() == 8) {
+        for (Student student : studentArray) {
+            if (student != null && studentId.equals(student.getId()) && studentId.length() == 8) {
                 System.out.println("The Student id already exists. Please try again.");
                 clearWorkingConsole();
                 registerNewStudent();
@@ -228,7 +243,7 @@ public class App {
         }
 
         // Check if student ID is 8 characters long
-        if (sId.length() != 8) {
+        if (studentId.length() != 8) {
             System.out.println("Invalid Student Id. Please ensure it is 8 characters long.");
             clearWorkingConsole();
             registerNewStudent();
@@ -237,18 +252,9 @@ public class App {
 
         // Enter the student name
         System.out.print("Enter the Student Name: ");
-        String sName = studInput.next();
-
-        // Adding the marks
-        int[] marks = new int[3];
-        for (int i = 0; i < 3; i++) {
-            System.out.print("Enter marks for Module " + (i + 1) + ": ");
-            marks[i] = studInput.nextInt();
-        }
-
-
+        String studentName = studInput.next();
         // add the array
-        students[studentCount] = new Student(sId, sName, marks);
+        studentArray[studentCount] = new Student(studentId, studentName);
         studentCount++;
 
         System.out.print("Added Successfully. Do you want to add another student? (Y/N) : ");
@@ -287,9 +293,9 @@ public class App {
 
         //deleting process
         for (int i = 0; i < studentCount; i++) {
-            if (students[i] != null && students[i].getId().equals(studentId)) {
-                students[i] = students[studentCount - 1];
-                students[studentCount - 1] = null;
+            if (studentArray[i] != null && studentArray[i].getId().equals(studentId)) {
+                studentArray[i] = studentArray[studentCount - 1];
+                studentArray[studentCount - 1] = null;
                 studentCount--;
                 System.out.print("Deleted Successfully. Do you want to delete another student? (Y/N) : ");
                 char ch = deleteStudent.next().charAt(0);
@@ -324,9 +330,12 @@ public class App {
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
+        // Enter the student id
         System.out.print("Enter the Student Id: ");
         String stuId = findStudent.next();
-        for (Student student : students) {
+
+        // Searching Part
+        for (Student student : studentArray) {
             if (student != null && stuId.equals(student.getId())) {
                 System.out.println("Student Name: " + student.getName());
 
@@ -351,7 +360,7 @@ public class App {
             } else {
                 System.out.println("Student is not found. Please Try Again.");
                 clearWorkingConsole();
-                mainMenuConsole();
+                findStudent();
             }
         }
     }
@@ -364,20 +373,27 @@ public class App {
         System.out.print("\t\t\t\t\t\t\t\tSTORE STUDENT DETAILS");
         System.out.println("\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
+
+        // Store the student details
         try {
-            FileWriter fileWriter = new FileWriter("src/task2/student.txt");
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            for (Student student : students) {
+            FileWriter studentDetail = new FileWriter("src/task2/student.txt");
+            BufferedWriter bufferedWriter = new BufferedWriter(studentDetail);
+            for (Student student : studentArray) {
                 if (student != null) {
                     bufferedWriter.write(student.getId() + " - " + student.getName());
-                    for (Module module : student.getModules()) {
-                        bufferedWriter.write(" - " + module.getMarks() + " - " + module.getGrade());
+                    Module[] modules = student.getModules();
+                    if (modules != null) {
+                        for (Module module : modules) {
+                            bufferedWriter.write(" , " + module.getMarks());
+                        }
+                    } else {
+                        bufferedWriter.write(",N/A,N/A,N/A"); // If no modules, write N/A
                     }
                     bufferedWriter.newLine();
                 }
             }
             bufferedWriter.close();
-            fileWriter.close();
+            studentDetail.close();
             System.out.println("Student details stored successfully.");
         } catch (IOException e) {
             System.out.println("An error occurred while storing student details.");
@@ -395,21 +411,33 @@ public class App {
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         try {
+            // Create a FileReader to read the student details file
             FileReader fileReader = new FileReader("src/task2/student.txt");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
             studentCount = 0;
+
+            // Read each line from the file
             while ((line = bufferedReader.readLine()) != null) {
+                // Split the line into details using the hyphen as the delimiter
                 String[] details = line.split("-");
-                String id = details[0];
-                String name = details[1];
-                int[] marks = new int[3];
-                for (int i = 0; i < 3; i++) {
-                    marks[i] = Integer.parseInt(details[2 + (i * 2)]);
+                // Ensure that the line contains the expected number of details
+                if (details.length == 8) { // Expecting 8 parts (id, name, and 6 elements for 3 marks)
+                    String id = details[0];
+                    String name = details[1];
+                    int[] marks = new int[3];
+                    for (int i = 0; i < 3; i++) {
+                        // Parse the marks from the string to integer
+                        marks[i] = Integer.parseInt(details[2 + (i * 2)]);
+                    }
+                    // Create a new Student object and add it to the studentArray
+                    studentArray[studentCount] = new Student(id, name, marks);
+                    studentCount++;
+                } else {
+                    System.out.println("Incorrect format in the file for line: " + line);
                 }
-                students[studentCount] = new Student(id, name, marks);
-                studentCount++;
             }
+
             bufferedReader.close();
             fileReader.close();
             System.out.println("Student details loaded successfully.");
@@ -435,10 +463,10 @@ public class App {
             // Sorting the students by name using Bubble Sort
             for (int i = 0; i < studentCount - 1; i++) {
                 for (int j = 0; j < studentCount - 1 - i; j++) {
-                    if (students[j].getName().compareTo(students[j + 1].getName()) > 0) {
-                        Student temp = students[j];
-                        students[j] = students[j + 1];
-                        students[j + 1] = temp;
+                    if (studentArray[j].getName().compareTo(studentArray[j + 1].getName()) > 0) {
+                        Student temp = studentArray[j];
+                        studentArray[j] = studentArray[j + 1];
+                        studentArray[j + 1] = temp;
                     }
                 }
             }
@@ -450,7 +478,7 @@ public class App {
 
             // Display sorted students
             for (int i = 0; i < studentCount; i++) {
-                System.out.printf("| %-10s | %-30s |%n", students[i].getId(), students[i].getName());
+                System.out.printf("| %-10s | %-30s |%n", studentArray[i].getId(), studentArray[i].getName());
             }
             System.out.println("+---------------------------------------------+");
         }
@@ -511,7 +539,7 @@ public class App {
         String sId = studInput.next();
 
         // Checking the student id exists or not
-        for (Student student : students) {
+        for (Student student : studentArray) {
             if (student != null && sId.equals(student.getId()) && sId.length() == 8) {
                 System.out.println("The Student id already exists. Please try again.");
                 clearWorkingConsole();
@@ -533,7 +561,7 @@ public class App {
         String sName = studInput.next();
 
         // adding the student details
-        students[studentCount] = new Student(sId, sName);
+        studentArray[studentCount] = new Student(sId, sName);
         studentCount++;
 
         System.out.print("Added Successfully. Do you want to add another student? (Y/N) : ");
@@ -564,20 +592,22 @@ public class App {
         System.out.print("\t\t\t\t\t\t\t\t\tADD MODULE MARKS");
         System.out.println("\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
+
+        // Enter the Student Id
         Scanner input = new Scanner(System.in);
         System.out.print("Enter the Student Id: ");
         String sId = input.next();
 
-        // adding the module marks in using this logic
-        for (int i = 0; i < studentCount; i++) {
-            Student student = students[i];
+        // checking the equality of student id and adding the module marks
+        for (Student student : studentArray) {
             if (student != null && student.getId().equals(sId)) {
                 int[] marks = new int[3];
-                for (int j = 0; j < 3; j++) {
-                    System.out.print("Enter marks for Module " + (j + 1) + ": ");
-                    marks[j] = input.nextInt();
+                for (int i = 0; i < 3; i++) {
+                    System.out.print("Enter marks for Module " + (i + 1) + ": ");
+                    marks[i] = input.nextInt();
                 }
-                students[i] = new Student(student.getId(), student.getName(), marks); // Update student with new marks
+                student.setModules(marks);
+
                 System.out.print("Marks Added Successfully. Do you want to add marks for another student? (Y/N) : ");
                 char ch = input.next().charAt(0);
                 switch (ch) {

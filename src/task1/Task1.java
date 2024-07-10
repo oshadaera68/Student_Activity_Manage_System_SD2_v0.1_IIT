@@ -9,7 +9,7 @@ import java.util.Scanner;
  * Version: v0.1.0
  **/
 
-public class AppInitializer {
+public class Task1 {
     // Student Count Variables
     private static final int MAX_CAPACITY = 100;
     // 2D array to store student details
@@ -165,7 +165,6 @@ public class AppInitializer {
                 studentData[i][1] = studentName;
                 currentStudentCount++;
 
-                // Handling the exception
                 System.out.println();
                 System.out.print("Added Successfully! Do you want to add another student? [Y/N]: ");
                 char yesNo = studInput.next().charAt(0);
@@ -201,6 +200,7 @@ public class AppInitializer {
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
         while (true) {
+            // Enter the Student Id
             System.out.print("Enter Student Id: ");
             String studentId = deleteStudent.next();
 
@@ -322,16 +322,15 @@ public class AppInitializer {
         System.out.print("\t\t\t\t\t\t\t\tSTORE STUDENT DETAILS");
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
+
         // Writing the data in the file
-        try (FileWriter fileWriter = new FileWriter("src/task1/student.txt")) {
+        try (FileWriter fileWriter = new FileWriter("src/task1/student-details.txt")) {
             // Iterate through the students array and write each student's details to the file
             for (int i = 0; i < currentStudentCount; i++) {
                 fileWriter.write(studentData[i][0] + " - " + studentData[i][1] + "\n"); // write to the file
             }
-            // Print a success message after writing all student details
             System.out.println("All Student Details are saved successfully.");
         } catch (IOException e) {
-            // Print an error message if an IOException occurs
             System.out.println("I got this error: " + e.getMessage());
         }
 
@@ -353,7 +352,7 @@ public class AppInitializer {
         // Loading the data from the file
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new FileReader("src/task1/student.txt"));
+            reader = new BufferedReader(new FileReader("src/task1/student-details.txt"));
             // Iterate through the students array and read each student's details from the file
             for (int i = 0; i < currentStudentCount; i++) {
                 studentData[i][0] = reader.readLine(); // read student ID from the file
@@ -362,7 +361,6 @@ public class AppInitializer {
             // Print a success message after loading all student details
             System.out.println("Student details loaded from file.");
         } catch (IOException e) {
-            // Print an error message if an IOException occurs
             System.out.println("Error loading student details: " + e.getMessage());
         } finally {
             // Close the reader if it was opened
@@ -391,7 +389,6 @@ public class AppInitializer {
 
         // Checking if there are any students registered
         if (currentStudentCount == 0) {
-            // If no students are registered, prompt the user to register new students
             System.out.println("No students are registered.");
             clearWorkingConsole();
             registerNewStudent();
@@ -400,7 +397,7 @@ public class AppInitializer {
             for (int i = 0; i < currentStudentCount - 1; i++) {
                 for (int j = 0; j < currentStudentCount - 1 - i; j++) {
                     if (studentData[j][1] != null && studentData[j + 1][1] != null) {
-                        // Compare adjacent students' names and swap if needed (case insensitive)
+                        // Compare adjacent students' names and swap if needed
                         if (studentData[j][1].compareToIgnoreCase(studentData[j + 1][1]) > 0) {
                             String[] temp = studentData[j];
                             studentData[j] = studentData[j + 1];
@@ -410,19 +407,25 @@ public class AppInitializer {
                 }
             }
 
-            // Display the sorted list of students
+            // Display the sorted list of students in a tabular format
+            System.out.println("+----------------------+----------------------+");
+            System.out.printf("| %-20s | %-20s |\n", "Student ID", "Name");
+            System.out.println("+----------------------+----------------------+");
+
             for (int i = 0; i < currentStudentCount; i++) {
                 if (studentData[i][0] != null && studentData[i][1] != null) {
                     // Capitalize the first letter of each name
                     String studentName = studentData[i][1].substring(0, 1).toUpperCase() + studentData[i][1].substring(1).toLowerCase();
-                    System.out.println(studentData[i][0] + " - " + studentName);
+                    System.out.printf("| %-20s | %-20s |\n", studentData[i][0], studentName);
                 }
             }
+
+            System.out.println("+----------------------+----------------------+");
         }
-        // Clear the console and return to the main menu
         clearWorkingConsole();
         displayMainMenu();
     }
+
 
 
     // Exit the system
@@ -451,19 +454,15 @@ public class AppInitializer {
 
     // Get the next available index for storing values in the students array
     public static int nextIdValues(String[][] students) {
-        // Initialize the array index to the length of the students array
         int array = students.length;
 
         // Iterate through the students array to find the first null value
         for (int i = 0; i < students.length; i++) {
-            // If a null value is found, set the array index to the current index
             if (students[i][0] == null) {
                 array = i;
                 break;
             }
         }
-
-        // Return the next available index
         return array;
     }
 }

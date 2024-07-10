@@ -1,8 +1,8 @@
 package task3;
 
+import java.io.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.io.*;
 
 /**
  * Coded By: Era Boy
@@ -23,6 +23,7 @@ class Module {
         this.grade = calculateGrade(marks);
     }
 
+    // calculate grade
     private String calculateGrade(int marks) {
         if (marks >= 80) {
             return "Distinction";
@@ -85,6 +86,7 @@ class Student {
         return modules;
     }
 
+    // total marks
     public int getTotalMarks() {
         int total = 0;
         for (Module module : modules) {
@@ -95,10 +97,12 @@ class Student {
         return total;
     }
 
+    // average marks
     public double getAverageMarks() {
         return getTotalMarks() / 3.0;
     }
 
+    // find the final grade
     public String getFinalGrade() {
         for (Module module : modules) {
             if (module.getGrade().equals("Fail")) {
@@ -109,9 +113,8 @@ class Student {
     }
 }
 
-
 // Main Program - Student Activity Management
-public class Main {
+public class Task3 {
     // Student Count Variables
     private static final int MAX_CAPACITY = 100;
     // Student Class Array
@@ -272,16 +275,7 @@ public class Main {
         System.out.print("Enter the Student Name: ");
         String sName = studInput.next();
 
-        // Adding the marks
-        int[] marks = new int[3];
-        for (int i = 0; i < 3; i++) {
-            System.out.print("Enter marks for Module " + (i + 1) + ": ");
-            marks[i] = studInput.nextInt();
-        }
-
-
-        // add the array
-        students[studentCount] = new Student(sId, sName, marks);
+        students[studentCount] = new Student(sId, sName);
         studentCount++;
 
         System.out.print("Added Successfully. Do you want to add another student? (Y/N) : ");
@@ -394,17 +388,17 @@ public class Main {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
-        System.out.print("\t\t\t\t\t\t\t\tSTORE STUDENT DETAILS");
+        System.out.print("\t\t\t\t\t\t\t\t\tSTORE STUDENT DETAILS");
         System.out.println("\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         try {
-            FileWriter fileWriter = new FileWriter("src/task2/student.txt");
+            FileWriter fileWriter = new FileWriter("src/task3/student.txt");
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             for (Student student : students) {
                 if (student != null) {
                     bufferedWriter.write(student.getId() + " - " + student.getName());
                     for (Module module : student.getModules()) {
-                        bufferedWriter.write(" - " + module.getMarks() + " - " + module.getGrade());
+                        bufferedWriter.write(" , " + module.getMarks());
                     }
                     bufferedWriter.newLine();
                 }
@@ -428,19 +422,26 @@ public class Main {
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         try {
-            FileReader fileReader = new FileReader("src/task2/student.txt");
+            FileReader fileReader = new FileReader("src/task3/student.txt");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
             studentCount = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] details = line.split("-");
-                String id = details[0];
-                String name = details[1];
-                int[] marks = new int[3];
-                for (int i = 0; i < 3; i++) {
-                    marks[i] = Integer.parseInt(details[2 + (i * 2)]);
+                String id = details[0].trim();
+                String name = details[1].trim();
+
+                if (details.length > 2) {
+                    // File contains marks
+                    int[] marks = new int[3];
+                    for (int i = 0; i < 3 && i + 2 < details.length; i++) {
+                        marks[i] = Integer.parseInt(details[i + 2].trim());
+                    }
+                    students[studentCount] = new Student(id, name, marks);
+                } else {
+                    // File only contains ID and name
+                    students[studentCount] = new Student(id, name);
                 }
-                students[studentCount] = new Student(id, name, marks);
                 studentCount++;
             }
             bufferedReader.close();
@@ -448,20 +449,21 @@ public class Main {
             System.out.println("Student details loaded successfully.");
         } catch (IOException e) {
             System.out.println("An error occurred while loading student details.");
+        } catch (NumberFormatException e) {
+            System.out.println("Error parsing marks. Ensure all marks are valid integers.");
         }
         clearWorkingConsole();
         mainMenuConsole();
     }
 
     // View the list of students
-    // View the list of students
     private static void viewStudentListByName() {
         System.out.print("\n");
-        System.out.println("+------------------------------------------------------------------------------------------------------------------------+");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
-        System.out.print("\t\t\t\t\t\t\t\t\tVIEW STUDENT LIST");
+        System.out.print("\t\t\t\t\t\t\t\t\t\tVIEW STUDENT LIST");
         System.out.println("\t\t\t\t\t\t\t\t\t|");
-        System.out.println("+------------------------------------------------------------------------------------------------------------------------+");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
 
         if (studentCount == 0) {
             System.out.println("No students are registered.");
@@ -470,7 +472,6 @@ public class Main {
             for (int i = 0; i < studentCount - 1; i++) {
                 for (int j = 0; j < studentCount - 1 - i; j++) {
                     if (students[j].getName().compareTo(students[j + 1].getName()) > 0) {
-                        // Swap students[j] and students[j + 1]
                         Student temp = students[j];
                         students[j] = students[j + 1];
                         students[j + 1] = temp;
@@ -478,36 +479,23 @@ public class Main {
                 }
             }
 
-            // Display table header with additional columns for marks, total, average
-            System.out.println("+------------------------------------------------------------------------------------------------------------------------+");
-            System.out.printf("| %-10s | %-30s | %-10s | %-10s | %-10s | %-10s | %-10s |%n",
-                    "Student ID", "Student Name", "Module 1", "Module 2", "Module 3", "Total", "Average");
-            System.out.println("+------------------------------------------------------------------------------------------------------------------------+");
+            // Display table header
+            System.out.println("+---------------------------------------------+");
+            System.out.printf("| %-10s | %-30s |%n", "Student ID", "Student Name");
+            System.out.println("+---------------------------------------------+");
 
-            // Display sorted students with their marks, total, and average
+            // Display sorted students
             for (int i = 0; i < studentCount; i++) {
-                Module[] modules = students[i].getModules(); // Get the student's modules
-                int total = students[i].getTotalMarks();  // Calculate total marks
-                double average = students[i].getAverageMarks();  // Calculate average marks
-
-                // Prepare marks for each module
-                String mark1 = modules[0].getMarks() == 0 ? "-" : String.valueOf(modules[0].getMarks());
-                String mark2 = modules[1].getMarks() == 0 ? "-" : String.valueOf(modules[1].getMarks());
-                String mark3 = modules[2].getMarks() == 0 ? "-" : String.valueOf(modules[2].getMarks());
-
-                // Print each student's details in tabular format
-                System.out.printf("| %-10s | %-30s | %-10s | %-10s | %-10s | %-10d | %-10.2f |%n",
-                        students[i].getId(), students[i].getName(), mark1, mark2, mark3, total, average);
+                System.out.printf("| %-10s | %-30s |%n", students[i].getId(), students[i].getName());
             }
-            System.out.println("+------------------------------------------------------------------------------------------------------------------------+");
+            System.out.println("+---------------------------------------------+");
         }
-        clearWorkingConsole();  // Clear the console
-        mainMenuConsole();  // Return to the main menu
+        clearWorkingConsole();
+        mainMenuConsole();
     }
 
 
-
-    // managing student part - menu
+    // managing student part
     private static void manageStudentMarks() {
         Scanner studInput = new Scanner(System.in);
         System.out.print("\n");
@@ -550,112 +538,6 @@ public class Main {
                 manageStudentMarks();
                 break;
         }
-    }
-
-    // add new student
-    private static void addNewStudent() {
-        Scanner studInput = new Scanner(System.in);
-        System.out.print("\n");
-        System.out.println("+-------------------------------------------------------------------------------------------+");
-        System.out.print("|");
-        System.out.print("\t\t\t\t\t\t\t\tADD NEW STUDENT");
-        System.out.println("\t\t\t\t\t\t\t\t\t\t|");
-        System.out.println("+-------------------------------------------------------------------------------------------+");
-
-        // Enter the student id
-        System.out.print("Enter the Student Id: ");
-        String sId = studInput.next();
-
-        // Checking the student id exists or not
-        for (Student student : students) {
-            if (student != null && sId.equals(student.getId()) && sId.length() == 8) {
-                System.out.println("The Student id already exists. Please try again.");
-                clearWorkingConsole();
-                addNewStudent();
-                return;
-            }
-        }
-
-        // Check if student ID is 8 characters long
-        if (sId.length() != 8) {
-            System.out.println("Invalid Student Id. Please ensure it is 8 characters long.");
-            clearWorkingConsole();
-            registerNewStudent();
-            return;
-        }
-
-        // Enter the student name
-        System.out.print("Enter the Student Name: ");
-        String sName = studInput.next();
-
-        // adding the student details
-        students[studentCount] = new Student(sId, sName);
-        studentCount++;
-
-        System.out.print("Added Successfully. Do you want to add another student? (Y/N) : ");
-        char ch = studInput.next().charAt(0);
-        switch (ch) {
-            case 'y':
-            case 'Y':
-                clearWorkingConsole();
-                addNewStudent();
-                return;
-            case 'n':
-            case 'N':
-                clearWorkingConsole();
-                manageStudentMarks();
-                return;
-            default:
-                System.out.println("Invalid value...Please try again!!!");
-                clearWorkingConsole();
-                mainMenuConsole();
-        }
-    }
-
-    // Adding the module marks
-    private static void addModuleMarks() {
-        System.out.print("\n");
-        System.out.println("+-------------------------------------------------------------------------------------------+");
-        System.out.print("|");
-        System.out.print("\t\t\t\t\t\t\t\t\tADD MODULE MARKS");
-        System.out.println("\t\t\t\t\t\t\t\t\t|");
-        System.out.println("+-------------------------------------------------------------------------------------------+");
-        Scanner input = new Scanner(System.in);
-        System.out.print("Enter the Student Id: ");
-        String sId = input.next();
-
-        // adding the module marks in using this logic
-        for (int i = 0; i < studentCount; i++) {
-            Student student = students[i];
-            if (student != null && student.getId().equals(sId)) {
-                int[] marks = new int[3];
-                for (int j = 0; j < 3; j++) {
-                    System.out.print("Enter marks for Module " + (j + 1) + ": ");
-                    marks[j] = input.nextInt();
-                }
-                students[i] = new Student(student.getId(), student.getName(), marks); // Update student with new marks
-                System.out.print("Marks Added Successfully. Do you want to add marks for another student? (Y/N) : ");
-                char ch = input.next().charAt(0);
-                switch (ch) {
-                    case 'y':
-                    case 'Y':
-                        clearWorkingConsole();
-                        addModuleMarks();
-                        return;
-                    case 'n':
-                    case 'N':
-                        clearWorkingConsole();
-                        manageStudentMarks();
-                        return;
-                    default:
-                        System.out.println("Invalid value...Please try again!!!");
-                        manageStudentMarks();
-                }
-            }
-        }
-        System.out.println("Student Id Not Exists. Try again.");
-        clearWorkingConsole();
-        addModuleMarks();
     }
 
     private static void comReportGenerator() {
@@ -784,6 +666,100 @@ public class Main {
         }
     }
 
+    private static void addNewStudent() {
+        Scanner studInput = new Scanner(System.in);
+        System.out.print("\n");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
+        System.out.print("|");
+        System.out.print("\t\t\t\t\t\t\t\tADD NEW STUDENT");
+        System.out.println("\t\t\t\t\t\t\t\t\t\t|");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
+
+        // Enter the student id
+        System.out.print("Enter the Student Id: ");
+        String sId = studInput.next();
+
+        // Checking the student id exists or not
+        for (Student student : students) {
+            if (student != null && sId.equals(student.getId()) && sId.length() == 8) {
+                System.out.println("The Student id already exists. Please try again.");
+                clearWorkingConsole();
+                addNewStudent();
+                return;
+            }
+        }
+
+        // Enter the student name
+        System.out.print("Enter the Student Name: ");
+        String sName = studInput.next();
+
+        students[studentCount] = new Student(sId, sName);
+        studentCount++;
+
+        System.out.print("Added Successfully. Do you want to add another student? (Y/N) : ");
+        char ch = studInput.next().charAt(0);
+        switch (ch) {
+            case 'y':
+            case 'Y':
+                clearWorkingConsole();
+                addNewStudent();
+                return;
+            case 'n':
+            case 'N':
+                clearWorkingConsole();
+                manageStudentMarks();
+                return;
+            default:
+                System.out.println("Invalid value...Please try again!!!");
+                clearWorkingConsole();
+                mainMenuConsole();
+        }
+    }
+
+    // Adding the module marks
+    private static void addModuleMarks() {
+        System.out.print("\n");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
+        System.out.print("|");
+        System.out.print("\t\t\t\t\t\t\t\t\tADD MODULE MARKS");
+        System.out.println("\t\t\t\t\t\t\t\t\t|");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
+        Scanner input = new Scanner(System.in);
+        System.out.print("Enter the Student Id: ");
+        String sId = input.next();
+
+        for (int i = 0; i < studentCount; i++) {
+            Student student = students[i];
+            if (student != null && student.getId().equals(sId)) {
+                Module[] modules = student.getModules();
+                for (int j = 0; j < 3; j++) {
+                    System.out.print("Enter marks for Module " + (j + 1) + ": ");
+                    int marks = input.nextInt();
+                    modules[j].setMarks(marks);
+                }
+                System.out.print("Marks Added Successfully. Do you want to add marks for another student? (Y/N) : ");
+                char ch = input.next().charAt(0);
+                switch (ch) {
+                    case 'y':
+                    case 'Y':
+                        clearWorkingConsole();
+                        addModuleMarks();
+                        return;
+                    case 'n':
+                    case 'N':
+                        clearWorkingConsole();
+                        manageStudentMarks();
+                        return;
+                    default:
+                        System.out.println("Invalid value...Please try again!!!");
+                        manageStudentMarks();
+                }
+            }
+        }
+        System.out.println("Student Id Not Exists. Try again.");
+        clearWorkingConsole();
+        addModuleMarks();
+    }
 
     // Exit the system
     private static void exitTheSystem() {
