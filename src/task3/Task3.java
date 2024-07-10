@@ -153,7 +153,7 @@ public class Task3 {
         System.out.println("[6]: Load Student Details (from the file)");
         System.out.print("[7]: View the list of students\t\t\t\t\t\t\t");
         System.out.println("[8]: Manage Students"); // Added New Item
-        System.out.print("[9]:Exit \t\t\t\t");
+        System.out.print("[9]: Exit \t\t\t\t");
         System.out.println();
         System.out.println();
 

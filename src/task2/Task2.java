@@ -11,8 +11,8 @@ import java.io.*;
 
 // Module Class
 class Module {
-    private int marks;
-    private String grade;
+    private final int marks;
+    private final String grade;
 
     public Module(int marks) {
         this.marks = marks;
@@ -38,30 +38,22 @@ class Module {
     public String getGrade() {
         return grade;
     }
-
-    public void setMarks(int marks) {
-        this.marks = marks;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
 }
 
 // Student Class
 class Student {
-    private final String id;
-    private final String name;
+    private final String studentId;
+    private final String studentName;
     private Module[] modules;
 
     public Student(String id, String name) {
-        this.id = id;
-        this.name = name;
+        this.studentId = id;
+        this.studentName = name;
     }
 
     public Student(String id, String name, int[] marks) {
-        this.id = id;
-        this.name = name;
+        this.studentId = id;
+        this.studentName = name;
         this.modules = new Module[3];
         for (int i = 0; i < 3; i++) {
             this.modules[i] = new Module(marks[i]);
@@ -69,11 +61,11 @@ class Student {
     }
 
     public String getId() {
-        return id;
+        return studentId;
     }
 
     public String getName() {
-        return name;
+        return studentId;
     }
 
     public Module[] getModules() {
@@ -86,21 +78,17 @@ class Student {
             this.modules[i] = new Module(marks[i]);
         }
     }
-
-    public void setModules(Module[] modules) {
-        this.modules = modules;
-    }
 }
 
 // Main Program - Student Activity Management
 public class Task2 {
     // Student Count Variables
-    private static final int MAX_CAPACITY = 100;
+    private static final int MAX_STUDENTS = 100;
     // Student Class Array
-    private static final Student[] studentArray = new Student[MAX_CAPACITY];
+    private static final Student[] studentArray = new Student[MAX_STUDENTS];
 
     // counting variable
-    private static int studentCount = 0;
+    private static int countOfStudents = 0;
 
     // Runnable Method
     public static void main(String[] args) {
@@ -109,7 +97,7 @@ public class Task2 {
             mainMenuConsole();
         } catch (InputMismatchException e) {
             System.out.println("Invalid input. Please type the integer input...!");
-            clearWorkingConsole();
+            clearConsole();
             mainMenuConsole();
         }
     }
@@ -139,13 +127,13 @@ public class Task2 {
         // menu input
         Scanner input_number = new Scanner(System.in);
         System.out.print("Enter the option to continue > ");
-        int inputted_num = input_number.nextInt();
-        switch (inputted_num) {
+        int input_num = input_number.nextInt();
+        switch (input_num) {
             case 1:
                 checkAvailableSeats();
                 break;
             case 2:
-                registerNewStudent();
+                registerStudent();
                 break;
             case 3:
                 deleteStudent();
@@ -171,14 +159,14 @@ public class Task2 {
 
             default:
                 System.out.println("Invalid Input!! Please Try again!!");
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
                 break;
         }
     }
 
     // clearing console
-    private static void clearWorkingConsole() {
+    private static void clearConsole() {
         final String os = System.getProperty("os.name");
         try {
             if (os.equals("Linux")) {
@@ -204,17 +192,17 @@ public class Task2 {
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
         // checking the available seats
-        int available_seats = MAX_CAPACITY - studentCount;
+        int available_seats = MAX_STUDENTS - countOfStudents;
         System.out.print("Available Seats: " + available_seats);
         System.out.println("\n");
-        clearWorkingConsole();
+        clearConsole();
         mainMenuConsole();
     }
 
     // add the student details
-    private static void registerNewStudent() {
+    private static void registerStudent() {
         // checking the available seats in the student
-        if (MAX_CAPACITY >= studentCount) {
+        if (MAX_STUDENTS >= countOfStudents) {
             System.out.println("Seats are available");
         } else {
             System.out.println("Seats are not available. Please try to the removing the one or more students.");
@@ -233,11 +221,11 @@ public class Task2 {
         String studentId = studInput.next();
 
         // Checking the student id exists or not
-        for (Student student : studentArray) {
-            if (student != null && studentId.equals(student.getId()) && studentId.length() == 8) {
+        for (Student students : studentArray) {
+            if (students != null && studentId.equals(students.getId()) && studentId.length() == 8) {
                 System.out.println("The Student id already exists. Please try again.");
-                clearWorkingConsole();
-                registerNewStudent();
+                clearConsole();
+                registerStudent();
                 return;
             }
         }
@@ -245,34 +233,35 @@ public class Task2 {
         // Check if student ID is 8 characters long
         if (studentId.length() != 8) {
             System.out.println("Invalid Student Id. Please ensure it is 8 characters long.");
-            clearWorkingConsole();
-            registerNewStudent();
+            clearConsole();
+            registerStudent();
             return;
         }
 
         // Enter the student name
         System.out.print("Enter the Student Name: ");
         String studentName = studInput.next();
+
         // add the array
-        studentArray[studentCount] = new Student(studentId, studentName);
-        studentCount++;
+        studentArray[countOfStudents] = new Student(studentId, studentName);
+        countOfStudents++;
 
         System.out.print("Added Successfully. Do you want to add another student? (Y/N) : ");
         char ch = studInput.next().charAt(0);
         switch (ch) {
             case 'y':
             case 'Y':
-                clearWorkingConsole();
-                registerNewStudent();
+                clearConsole();
+                registerStudent();
                 return;
             case 'n':
             case 'N':
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
                 return;
             default:
                 System.out.println("Invalid value...Please try again!!!");
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
         }
     }
@@ -292,27 +281,27 @@ public class Task2 {
         String studentId = deleteStudent.next();
 
         //deleting process
-        for (int i = 0; i < studentCount; i++) {
+        for (int i = 0; i < countOfStudents; i++) {
             if (studentArray[i] != null && studentArray[i].getId().equals(studentId)) {
-                studentArray[i] = studentArray[studentCount - 1];
-                studentArray[studentCount - 1] = null;
-                studentCount--;
+                studentArray[i] = studentArray[countOfStudents - 1];
+                studentArray[countOfStudents - 1] = null;
+                countOfStudents--;
                 System.out.print("Deleted Successfully. Do you want to delete another student? (Y/N) : ");
                 char ch = deleteStudent.next().charAt(0);
                 switch (ch) {
                     case 'y':
                     case 'Y':
-                        clearWorkingConsole();
+                        clearConsole();
                         deleteStudent();
                         return;
                     case 'n':
                     case 'N':
-                        clearWorkingConsole();
+                        clearConsole();
                         mainMenuConsole();
                         return;
                     default:
                         System.out.println("Invalid value...Please try again!!!");
-                        clearWorkingConsole();
+                        clearConsole();
                         mainMenuConsole();
                         return;
                 }
@@ -335,31 +324,31 @@ public class Task2 {
         String stuId = findStudent.next();
 
         // Searching Part
-        for (Student student : studentArray) {
-            if (student != null && stuId.equals(student.getId())) {
-                System.out.println("Student Name: " + student.getName());
+        for (Student students : studentArray) {
+            if (students != null && stuId.equals(students.getId())) {
+                System.out.println("Student Name: " + students.getName());
 
                 System.out.print("Searched Successfully. Do you want to search another student? (Y/N) : ");
                 char ch = findStudent.next().charAt(0);
                 switch (ch) {
                     case 'y':
                     case 'Y':
-                        clearWorkingConsole();
+                        clearConsole();
                         findStudent();
                         return;
                     case 'n':
                     case 'N':
-                        clearWorkingConsole();
+                        clearConsole();
                         mainMenuConsole();
                         return;
                     default:
                         System.out.println("Invalid value...Please try again!!!");
-                        clearWorkingConsole();
+                        clearConsole();
                         mainMenuConsole();
                 }
             } else {
                 System.out.println("Student is not found. Please Try Again.");
-                clearWorkingConsole();
+                clearConsole();
                 findStudent();
             }
         }
@@ -378,10 +367,10 @@ public class Task2 {
         try {
             FileWriter studentDetail = new FileWriter("src/task2/student.txt");
             BufferedWriter bufferedWriter = new BufferedWriter(studentDetail);
-            for (Student student : studentArray) {
-                if (student != null) {
-                    bufferedWriter.write(student.getId() + " - " + student.getName());
-                    Module[] modules = student.getModules();
+            for (Student students : studentArray) {
+                if (students != null) {
+                    bufferedWriter.write(students.getId() + " - " + students.getName());
+                    Module[] modules = students.getModules();
                     if (modules != null) {
                         for (Module module : modules) {
                             bufferedWriter.write(" , " + module.getMarks());
@@ -398,7 +387,7 @@ public class Task2 {
         } catch (IOException e) {
             System.out.println("An error occurred while storing student details.");
         }
-        clearWorkingConsole();
+        clearConsole();
         mainMenuConsole();
     }
 
@@ -415,24 +404,23 @@ public class Task2 {
             FileReader fileReader = new FileReader("src/task2/student.txt");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
-            studentCount = 0;
+            countOfStudents = 0;
 
             // Read each line from the file
             while ((line = bufferedReader.readLine()) != null) {
                 // Split the line into details using the hyphen as the delimiter
-                String[] details = line.split("-");
-                // Ensure that the line contains the expected number of details
-                if (details.length == 8) { // Expecting 8 parts (id, name, and 6 elements for 3 marks)
-                    String id = details[0];
-                    String name = details[1];
-                    int[] marks = new int[3];
+                String[] studentDetails = line.split("-");
+                if (studentDetails.length == 8) { // Expecting 8 parts (id, name, and 6 elements for 3 marks)
+                    String stu_id = studentDetails[0];
+                    String stu_name = studentDetails[1];
+                    int[] stu_marks = new int[3];
                     for (int i = 0; i < 3; i++) {
                         // Parse the marks from the string to integer
-                        marks[i] = Integer.parseInt(details[2 + (i * 2)]);
+                        stu_marks[i] = Integer.parseInt(studentDetails[2 + (i * 2)]);
                     }
                     // Create a new Student object and add it to the studentArray
-                    studentArray[studentCount] = new Student(id, name, marks);
-                    studentCount++;
+                    studentArray[countOfStudents] = new Student(stu_id, stu_name, stu_marks);
+                    countOfStudents++;
                 } else {
                     System.out.println("Incorrect format in the file for line: " + line);
                 }
@@ -444,7 +432,7 @@ public class Task2 {
         } catch (IOException e) {
             System.out.println("An error occurred while loading student details.");
         }
-        clearWorkingConsole();
+        clearConsole();
         mainMenuConsole();
     }
 
@@ -457,16 +445,16 @@ public class Task2 {
         System.out.println("\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
-        if (studentCount == 0) {
+        if (countOfStudents == 0) {
             System.out.println("No students are registered.");
         } else {
             // Sorting the students by name using Bubble Sort
-            for (int i = 0; i < studentCount - 1; i++) {
-                for (int j = 0; j < studentCount - 1 - i; j++) {
+            for (int i = 0; i < countOfStudents - 1; i++) {
+                for (int j = 0; j < countOfStudents - 1 - i; j++) {
                     if (studentArray[j].getName().compareTo(studentArray[j + 1].getName()) > 0) {
-                        Student temp = studentArray[j];
+                        Student tempStudent = studentArray[j];
                         studentArray[j] = studentArray[j + 1];
-                        studentArray[j + 1] = temp;
+                        studentArray[j + 1] = tempStudent;
                     }
                 }
             }
@@ -477,12 +465,12 @@ public class Task2 {
             System.out.println("+---------------------------------------------+");
 
             // Display sorted students
-            for (int i = 0; i < studentCount; i++) {
+            for (int i = 0; i < countOfStudents; i++) {
                 System.out.printf("| %-10s | %-30s |%n", studentArray[i].getId(), studentArray[i].getName());
             }
             System.out.println("+---------------------------------------------+");
         }
-        clearWorkingConsole();
+        clearConsole();
         mainMenuConsole();
     }
 
@@ -513,12 +501,12 @@ public class Task2 {
                 addModuleMarks();
                 break;
             case 3:
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
                 break;
             default:
                 System.out.println("Invalid Input! Please Try again.");
-                clearWorkingConsole();
+                clearConsole();
                 manageStudentMarks();
                 break;
         }
@@ -536,23 +524,23 @@ public class Task2 {
 
         // Enter the student id
         System.out.print("Enter the Student Id: ");
-        String sId = studInput.next();
+        String stuId = studInput.next();
 
         // Checking the student id exists or not
-        for (Student student : studentArray) {
-            if (student != null && sId.equals(student.getId()) && sId.length() == 8) {
+        for (Student students : studentArray) {
+            if (students != null && stuId.equals(students.getId()) && stuId.length() == 8) {
                 System.out.println("The Student id already exists. Please try again.");
-                clearWorkingConsole();
+                clearConsole();
                 addNewStudent();
                 return;
             }
         }
 
         // Check if student ID is 8 characters long
-        if (sId.length() != 8) {
+        if (stuId.length() != 8) {
             System.out.println("Invalid Student Id. Please ensure it is 8 characters long.");
-            clearWorkingConsole();
-            registerNewStudent();
+            clearConsole();
+            registerStudent();
             return;
         }
 
@@ -561,25 +549,25 @@ public class Task2 {
         String sName = studInput.next();
 
         // adding the student details
-        studentArray[studentCount] = new Student(sId, sName);
-        studentCount++;
+        studentArray[countOfStudents] = new Student(stuId, sName);
+        countOfStudents++;
 
         System.out.print("Added Successfully. Do you want to add another student? (Y/N) : ");
         char ch = studInput.next().charAt(0);
         switch (ch) {
             case 'y':
             case 'Y':
-                clearWorkingConsole();
+                clearConsole();
                 addNewStudent();
                 return;
             case 'n':
             case 'N':
-                clearWorkingConsole();
+                clearConsole();
                 manageStudentMarks();
                 return;
             default:
                 System.out.println("Invalid value...Please try again!!!");
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
         }
     }
@@ -599,26 +587,26 @@ public class Task2 {
         String sId = input.next();
 
         // checking the equality of student id and adding the module marks
-        for (Student student : studentArray) {
-            if (student != null && student.getId().equals(sId)) {
-                int[] marks = new int[3];
+        for (Student students : studentArray) {
+            if (students != null && students.getId().equals(sId)) {
+                int[] stu_marks = new int[3];
                 for (int i = 0; i < 3; i++) {
                     System.out.print("Enter marks for Module " + (i + 1) + ": ");
-                    marks[i] = input.nextInt();
+                    stu_marks[i] = input.nextInt();
                 }
-                student.setModules(marks);
+                students.setModules(stu_marks);
 
                 System.out.print("Marks Added Successfully. Do you want to add marks for another student? (Y/N) : ");
                 char ch = input.next().charAt(0);
                 switch (ch) {
                     case 'y':
                     case 'Y':
-                        clearWorkingConsole();
+                        clearConsole();
                         addModuleMarks();
                         return;
                     case 'n':
                     case 'N':
-                        clearWorkingConsole();
+                        clearConsole();
                         manageStudentMarks();
                         return;
                     default:
@@ -628,7 +616,7 @@ public class Task2 {
             }
         }
         System.out.println("Student Id Not Exists. Try again.");
-        clearWorkingConsole();
+        clearConsole();
         addModuleMarks();
     }
 
@@ -640,17 +628,17 @@ public class Task2 {
         switch (yesNo) {
             case 'y':
             case 'Y':
-                clearWorkingConsole();
+                clearConsole();
                 System.exit(0);
                 break;
             case 'n':
             case 'N':
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
                 break;
             default:
                 System.out.println("Invalid Value.. Try Again..!");
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
                 break;
         }
