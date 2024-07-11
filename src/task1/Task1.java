@@ -383,7 +383,7 @@ public class Task1 {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
-        System.out.print("\t\t\t\t\t\t\t\t\tVIEW STUDENT LIST");
+        System.out.print("\t\t\t\t\t\t\t\t\tVIEW STUDENT LIST BY NAME");
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 

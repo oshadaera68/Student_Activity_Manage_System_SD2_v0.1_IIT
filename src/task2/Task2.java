@@ -4,11 +4,6 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.io.*;
 
-/**
- * Coded By: Era Boy
- * Version: v0.1.0
- **/
-
 // Module Class
 class Module {
     private final int marks;
@@ -65,7 +60,7 @@ class Student {
     }
 
     public String getName() {
-        return studentId;
+        return studentName;
     }
 
     public Module[] getModules() {
@@ -82,7 +77,7 @@ class Student {
 
 // Main Program - Student Activity Management
 public class Task2 {
-    // Student Count Variables
+    // Student Seats
     private static final int MAX_STUDENTS = 100;
     // Student Class Array
     private static final Student[] studentArray = new Student[MAX_STUDENTS];
@@ -373,10 +368,10 @@ public class Task2 {
                     Module[] modules = students.getModules();
                     if (modules != null) {
                         for (Module module : modules) {
-                            bufferedWriter.write(" , " + module.getMarks());
+                            bufferedWriter.write(" - " + module.getMarks());
                         }
                     } else {
-                        bufferedWriter.write(",N/A,N/A,N/A"); // If no modules, write N/A
+                        bufferedWriter.write("- N/A - N/A - N/A"); // If no modules, write N/A
                     }
                     bufferedWriter.newLine();
                 }
@@ -410,13 +405,13 @@ public class Task2 {
             while ((line = bufferedReader.readLine()) != null) {
                 // Split the line into details using the hyphen as the delimiter
                 String[] studentDetails = line.split("-");
-                if (studentDetails.length == 8) { // Expecting 8 parts (id, name, and 6 elements for 3 marks)
+                if (studentDetails.length == 5) { // Expecting 8 parts (id, name, and 6 elements for 3 marks)
                     String stu_id = studentDetails[0];
                     String stu_name = studentDetails[1];
                     int[] stu_marks = new int[3];
                     for (int i = 0; i < 3; i++) {
                         // Parse the marks from the string to integer
-                        stu_marks[i] = Integer.parseInt(studentDetails[2 + (i * 2)]);
+                        stu_marks[i] = Integer.parseInt(studentDetails[i + 2].trim());
                     }
                     // Create a new Student object and add it to the studentArray
                     studentArray[countOfStudents] = new Student(stu_id, stu_name, stu_marks);
@@ -441,7 +436,7 @@ public class Task2 {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
-        System.out.print("\t\t\t\t\t\t\t\t\t\tVIEW STUDENT LIST");
+        System.out.print("\t\t\t\t\t\t\t\t\t\tVIEW STUDENT LIST BY NAME");
         System.out.println("\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 

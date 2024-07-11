@@ -4,12 +4,6 @@ import java.io.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-/**
- * Coded By: Era Boy
- * Version: v0.1.0
- **/
-
-
 // Module Class
 class Module {
     private int marks;
@@ -130,7 +124,7 @@ public class Task3 {
             mainMenuConsole();
         } catch (InputMismatchException e) {
             System.out.println("Invalid input. Please type the integer input...!");
-            clearWorkingConsole();
+            clearConsole();
             mainMenuConsole();
         }
     }
@@ -166,7 +160,7 @@ public class Task3 {
                 checkAvailableSeats();
                 break;
             case 2:
-                registerNewStudent();
+                registerStudent();
                 break;
             case 3:
                 deleteStudent();
@@ -192,14 +186,14 @@ public class Task3 {
 
             default:
                 System.out.println("Invalid Input!! Please Try again!!");
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
                 break;
         }
     }
 
     // clearing console
-    private static void clearWorkingConsole() {
+    private static void clearConsole() {
         final String os = System.getProperty("os.name");
         try {
             if (os.equals("Linux")) {
@@ -228,12 +222,12 @@ public class Task3 {
         int available_seats = MAX_CAPACITY - studentCount;
         System.out.print("Available Seats: " + available_seats);
         System.out.println("\n");
-        clearWorkingConsole();
+        clearConsole();
         mainMenuConsole();
     }
 
     // add the student details
-    private static void registerNewStudent() {
+    private static void registerStudent() {
         // checking the available seats in the student
         if (MAX_CAPACITY >= studentCount) {
             System.out.println("Seats are available");
@@ -257,8 +251,8 @@ public class Task3 {
         for (Student student : students) {
             if (student != null && sId.equals(student.getId()) && sId.length() == 8) {
                 System.out.println("The Student id already exists. Please try again.");
-                clearWorkingConsole();
-                registerNewStudent();
+                clearConsole();
+                registerStudent();
                 return;
             }
         }
@@ -266,8 +260,8 @@ public class Task3 {
         // Check if student ID is 8 characters long
         if (sId.length() != 8) {
             System.out.println("Invalid Student Id. Please ensure it is 8 characters long.");
-            clearWorkingConsole();
-            registerNewStudent();
+            clearConsole();
+            registerStudent();
             return;
         }
 
@@ -283,17 +277,17 @@ public class Task3 {
         switch (ch) {
             case 'y':
             case 'Y':
-                clearWorkingConsole();
-                registerNewStudent();
+                clearConsole();
+                registerStudent();
                 return;
             case 'n':
             case 'N':
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
                 return;
             default:
                 System.out.println("Invalid value...Please try again!!!");
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
         }
     }
@@ -323,17 +317,17 @@ public class Task3 {
                 switch (ch) {
                     case 'y':
                     case 'Y':
-                        clearWorkingConsole();
+                        clearConsole();
                         deleteStudent();
                         return;
                     case 'n':
                     case 'N':
-                        clearWorkingConsole();
+                        clearConsole();
                         mainMenuConsole();
                         return;
                     default:
                         System.out.println("Invalid value...Please try again!!!");
-                        clearWorkingConsole();
+                        clearConsole();
                         mainMenuConsole();
                         return;
                 }
@@ -362,22 +356,22 @@ public class Task3 {
                 switch (ch) {
                     case 'y':
                     case 'Y':
-                        clearWorkingConsole();
+                        clearConsole();
                         findStudent();
                         return;
                     case 'n':
                     case 'N':
-                        clearWorkingConsole();
+                        clearConsole();
                         mainMenuConsole();
                         return;
                     default:
                         System.out.println("Invalid value...Please try again!!!");
-                        clearWorkingConsole();
+                        clearConsole();
                         mainMenuConsole();
                 }
             } else {
                 System.out.println("Student is not found. Please Try Again.");
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
             }
         }
@@ -409,7 +403,7 @@ public class Task3 {
         } catch (IOException e) {
             System.out.println("An error occurred while storing student details.");
         }
-        clearWorkingConsole();
+        clearConsole();
         mainMenuConsole();
     }
 
@@ -452,7 +446,7 @@ public class Task3 {
         } catch (NumberFormatException e) {
             System.out.println("Error parsing marks. Ensure all marks are valid integers.");
         }
-        clearWorkingConsole();
+        clearConsole();
         mainMenuConsole();
     }
 
@@ -461,7 +455,7 @@ public class Task3 {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
-        System.out.print("\t\t\t\t\t\t\t\t\t\tVIEW STUDENT LIST");
+        System.out.print("\t\t\t\t\t\t\t\t\t\tVIEW STUDENT LIST BY NAME");
         System.out.println("\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
@@ -490,7 +484,7 @@ public class Task3 {
             }
             System.out.println("+---------------------------------------------+");
         }
-        clearWorkingConsole();
+        clearConsole();
         mainMenuConsole();
     }
 
@@ -501,7 +495,7 @@ public class Task3 {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
-        System.out.print("\t\t\t\t\t\t\t\t\tMANAGE STUDENT RESULTS");
+        System.out.print("\t\t\t\t\t\t\t\t\tMANAGE STUDENT");
         System.out.println("\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
@@ -529,17 +523,18 @@ public class Task3 {
                 comReportGenerator();
                 break;
             case 5:
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
                 break;
             default:
                 System.out.println("Invalid Input! Please Try again.");
-                clearWorkingConsole();
+                clearConsole();
                 manageStudentMarks();
                 break;
         }
     }
 
+    // Student Report
     private static void comReportGenerator() {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
@@ -566,21 +561,22 @@ public class Task3 {
         switch (ch) {
             case 'y':
             case 'Y':
-                clearWorkingConsole();
+                clearConsole();
                 manageStudentMarks();
                 return;
             case 'n':
             case 'N':
-                clearWorkingConsole();
+                clearConsole();
                 comReportGenerator();
                 return;
             default:
                 System.out.println("Invalid value...Please try again!!!");
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
         }
     }
 
+    // Summary
     private static void summaryGenerator() {
         int totalStudents = 0;
         int totalMarks = 0;
@@ -611,6 +607,7 @@ public class Task3 {
             return;
         }
 
+        // find the average of the all students
         averageMarks = (double) totalMarks / totalStudents;
 
         // Sort students by total marks using bubble sort
@@ -625,6 +622,7 @@ public class Task3 {
             }
         }
 
+        // printing part
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
@@ -651,17 +649,17 @@ public class Task3 {
         switch (ch) {
             case 'y':
             case 'Y':
-                clearWorkingConsole();
+                clearConsole();
                 manageStudentMarks();
                 return;
             case 'n':
             case 'N':
-                clearWorkingConsole();
+                clearConsole();
                 summaryGenerator();
                 return;
             default:
                 System.out.println("Invalid value...Please try again!!!");
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
         }
     }
@@ -683,10 +681,18 @@ public class Task3 {
         for (Student student : students) {
             if (student != null && sId.equals(student.getId()) && sId.length() == 8) {
                 System.out.println("The Student id already exists. Please try again.");
-                clearWorkingConsole();
+                clearConsole();
                 addNewStudent();
                 return;
             }
+        }
+
+        // Check if student ID is 8 characters long
+        if (sId.length() != 8) {
+            System.out.println("Invalid Student Id. Please ensure it is 8 characters long.");
+            clearConsole();
+            registerStudent();
+            return;
         }
 
         // Enter the student name
@@ -701,17 +707,17 @@ public class Task3 {
         switch (ch) {
             case 'y':
             case 'Y':
-                clearWorkingConsole();
+                clearConsole();
                 addNewStudent();
                 return;
             case 'n':
             case 'N':
-                clearWorkingConsole();
+                clearConsole();
                 manageStudentMarks();
                 return;
             default:
                 System.out.println("Invalid value...Please try again!!!");
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
         }
     }
@@ -742,12 +748,12 @@ public class Task3 {
                 switch (ch) {
                     case 'y':
                     case 'Y':
-                        clearWorkingConsole();
+                        clearConsole();
                         addModuleMarks();
                         return;
                     case 'n':
                     case 'N':
-                        clearWorkingConsole();
+                        clearConsole();
                         manageStudentMarks();
                         return;
                     default:
@@ -757,7 +763,7 @@ public class Task3 {
             }
         }
         System.out.println("Student Id Not Exists. Try again.");
-        clearWorkingConsole();
+        clearConsole();
         addModuleMarks();
     }
 
@@ -769,17 +775,17 @@ public class Task3 {
         switch (yesNo) {
             case 'y':
             case 'Y':
-                clearWorkingConsole();
+                clearConsole();
                 System.exit(0);
                 break;
             case 'n':
             case 'N':
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
                 break;
             default:
                 System.out.println("Invalid Value.. Try Again..!");
-                clearWorkingConsole();
+                clearConsole();
                 mainMenuConsole();
                 break;
         }
