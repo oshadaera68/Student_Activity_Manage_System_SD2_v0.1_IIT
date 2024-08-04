@@ -382,23 +382,30 @@ public class Task3 {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
-        System.out.print("\t\t\t\t\t\t\t\t\tSTORE STUDENT DETAILS");
+        System.out.print("\t\t\t\t\t\t\t\tSTORE STUDENT DETAILS");
         System.out.println("\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
+
+        // Store the student details
         try {
-            FileWriter fileWriter = new FileWriter("src/task3/student.txt");
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            for (Student student : students) {
-                if (student != null) {
-                    bufferedWriter.write(student.getId() + " - " + student.getName());
-                    for (Module module : student.getModules()) {
-                        bufferedWriter.write(" , " + module.getMarks());
+            FileWriter studentDetail = new FileWriter("src/task2/student.txt");
+            BufferedWriter bufferedWriter = new BufferedWriter(studentDetail);
+            for (task3.Student students : students) {
+                if (students != null) {
+                    bufferedWriter.write(students.getId() + " - " + students.getName());
+                    task3.Module[] modules = students.getModules();
+                    if (modules != null) {
+                        for (task3.Module module : modules) {
+                            bufferedWriter.write(" - " + module.getMarks());
+                        }
+                    } else {
+                        bufferedWriter.write("- 0 - 0 - 0"); // If no modules, write N/A
                     }
                     bufferedWriter.newLine();
                 }
             }
             bufferedWriter.close();
-            fileWriter.close();
+            studentDetail.close();
             System.out.println("Student details stored successfully.");
         } catch (IOException e) {
             System.out.println("An error occurred while storing student details.");
@@ -407,7 +414,6 @@ public class Task3 {
         mainMenuConsole();
     }
 
-    // Load Student details
     private static void loadStudentDetails() {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
@@ -416,35 +422,37 @@ public class Task3 {
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         try {
+            // Create a FileReader to read the student details file
             FileReader fileReader = new FileReader("src/task3/student.txt");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
             studentCount = 0;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] details = line.split("-");
-                String id = details[0].trim();
-                String name = details[1].trim();
 
-                if (details.length > 2) {
-                    // File contains marks
-                    int[] marks = new int[3];
-                    for (int i = 0; i < 3 && i + 2 < details.length; i++) {
-                        marks[i] = Integer.parseInt(details[i + 2].trim());
+            // Read each line from the file
+            while ((line = bufferedReader.readLine()) != null) {
+                // Split the line into details using the hyphen as the delimiter
+                String[] studentDetails = line.split("-");
+                if (studentDetails.length == 5) { // Expecting 8 parts (id, name, and 6 elements for 3 marks)
+                    String stu_id = studentDetails[0];
+                    String stu_name = studentDetails[1];
+                    int[] stu_marks = new int[3];
+                    for (int i = 0; i < 3; i++) {
+                        // Parse the marks from the string to integer
+                        stu_marks[i] = Integer.parseInt(studentDetails[i + 2].trim());
                     }
-                    students[studentCount] = new Student(id, name, marks);
+                    // Create a new Student object and add it to the studentArray
+                    students[studentCount] = new task3.Student(stu_id, stu_name, stu_marks);
+                    studentCount++;
                 } else {
-                    // File only contains ID and name
-                    students[studentCount] = new Student(id, name);
+                    System.out.println("Incorrect format in the file for line: " + line);
                 }
-                studentCount++;
             }
+
             bufferedReader.close();
             fileReader.close();
             System.out.println("Student details loaded successfully.");
         } catch (IOException e) {
             System.out.println("An error occurred while loading student details.");
-        } catch (NumberFormatException e) {
-            System.out.println("Error parsing marks. Ensure all marks are valid integers.");
         }
         clearConsole();
         mainMenuConsole();

@@ -1,5 +1,6 @@
 package task2;
 
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.io.*;
@@ -371,7 +372,7 @@ public class Task2 {
                             bufferedWriter.write(" - " + module.getMarks());
                         }
                     } else {
-                        bufferedWriter.write("- N/A - N/A - N/A"); // If no modules, write N/A
+                        bufferedWriter.write("- 0 - 0 - 0"); // If no modules, write N/A
                     }
                     bufferedWriter.newLine();
                 }
@@ -404,14 +405,17 @@ public class Task2 {
             // Read each line from the file
             while ((line = bufferedReader.readLine()) != null) {
                 // Split the line into details using the hyphen as the delimiter
+                System.out.println(line);
                 String[] studentDetails = line.split("-");
+                System.out.println(studentDetails.length);
+                System.out.println(Arrays.toString(studentDetails));
                 if (studentDetails.length == 5) { // Expecting 8 parts (id, name, and 6 elements for 3 marks)
                     String stu_id = studentDetails[0];
                     String stu_name = studentDetails[1];
                     int[] stu_marks = new int[3];
                     for (int i = 0; i < 3; i++) {
                         // Parse the marks from the string to integer
-                        stu_marks[i] = Integer.parseInt(studentDetails[i + 2].trim());
+                        stu_marks[i] = Integer.parseInt(studentDetails[i+2].trim());
                     }
                     // Create a new Student object and add it to the studentArray
                     studentArray[countOfStudents] = new Student(stu_id, stu_name, stu_marks);
@@ -436,7 +440,7 @@ public class Task2 {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
-        System.out.print("\t\t\t\t\t\t\t\t\t\tVIEW STUDENT LIST BY NAME");
+        System.out.print("\t\t\t\t\t\t\t\t\t\tVIEW STUDENT LIST");
         System.out.println("\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 

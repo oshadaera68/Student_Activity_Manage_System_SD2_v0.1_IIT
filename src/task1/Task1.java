@@ -4,11 +4,6 @@ import java.io.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-/**
- * Coded By: Era Boy
- * Version: v0.1.0
- **/
-
 public class Task1 {
     // Student Count Variables
     private static final int MAX_CAPACITY = 100;
@@ -383,7 +378,7 @@ public class Task1 {
         System.out.print("\n");
         System.out.println("+-------------------------------------------------------------------------------------------+");
         System.out.print("|");
-        System.out.print("\t\t\t\t\t\t\t\t\tVIEW STUDENT LIST BY NAME");
+        System.out.print("\t\t\t\t\t\t\tVIEW STUDENT LIST BY NAME");
         System.out.println("\t\t\t\t\t\t\t\t\t\t|");
         System.out.println("+-------------------------------------------------------------------------------------------+");
 
@@ -425,6 +420,7 @@ public class Task1 {
         clearWorkingConsole();
         displayMainMenu();
     }
+
 
 
 
